@@ -51,10 +51,11 @@
               <small class="text-muted">Shared publicly - 7:30 PM today</small>
             </div>
             <div class="dropdown ms-auto">
-              <button class="btn btn-outline-secondary rounded-circle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-outline-light text-dark rounded-circle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-ellipsis"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Chỉnh sửa</a></li>
                 <li><a class="dropdown-item" href="#">Xoá bài viết</a></li>
               </ul>
             </div>
@@ -73,8 +74,7 @@
             </a>
           </div>
         </div>
-        <div class="card-footer bg-light">
-          <!-- Danh sách bình luận -->
+        <div class="card-footer bg-white p-3">
           <div class="comments mb-3">
             <div class="d-flex mb-2">
               <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User" style="height: 40px; width: auto;">
@@ -93,13 +93,14 @@
               </div>
             </div>
           </div>
-          <!-- Form thêm bình luận -->
           <div class="d-flex">
             <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
-            <input type="text" class="form-control rounded-pill" placeholder="Viết bình luận...">
-            <button class="btn btn-primary ms-2 rounded-circle">
-              <i class="fa-regular fa-paper-plane"></i>
-            </button>
+            <form action="" class="d-flex flex-grow-1">
+              <input type="text" class="form-control rounded-pill flex-grow-1" placeholder="Viết bình luận...">
+              <button class="btn ms-1 rounded-circle">
+                <i class="fa-solid fa-paper-plane text-primary"></i>
+              </button>
+            </form>
           </div>
         </div>
       </div>

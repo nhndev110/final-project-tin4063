@@ -15,14 +15,21 @@
         </p>
         <div class="swiper-container overflow-hidden mb-3">
           <div class="swiper-wrapper">
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 1"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 2"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 3"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 3"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 3"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 3"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 3"></div>
-            <div class="user-select-none swiper-slide"><img src="https://via.placeholder.com/150" alt="Image 3"></div>
+            <div class="user-select-none swiper-slide">
+              <img src="https://via.placeholder.com/150" alt="Image 1" class="rounded" />
+            </div>
+            <div class="user-select-none swiper-slide">
+              <img src="https://via.placeholder.com/150" alt="Image 2" class="rounded" />
+            </div>
+            <div class="user-select-none swiper-slide">
+              <img src="https://via.placeholder.com/150" alt="Image 3" class="rounded" />
+            </div>
+            <div class="user-select-none swiper-slide">
+              <img src="https://via.placeholder.com/150" alt="Image 3" class="rounded" />
+            </div>
+            <div class="user-select-none swiper-slide">
+              <img src="https://via.placeholder.com/150" alt="Image 3" class="rounded" />
+            </div>
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center">

@@ -7,7 +7,6 @@ use App\Models\Post;
 class PostService
 {
   private static ?Post $postModel = null;
-  private ?Post $test = null;
 
   private static function getPostModel(): Post
   {

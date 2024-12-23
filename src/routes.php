@@ -20,7 +20,7 @@ $router->addRoute('/post/create', [new PostController(), 'create']);
 $router->addRoute('/post/update/(\d+)', [new PostController(), 'update']);
 $router->addRoute('/post/delete/(\d+)', [new PostController(), 'delete']);
 
-$router->addRoute('/search(\?.*)?', [new SearchController(), 'index']);
+$router->addRoute('/search', [new SearchController(), 'index']);
 
 $router->addRoute('/login', [new AccountController(), 'login']);
 $router->addRoute('/signup', [new AccountController(), 'signup']);
