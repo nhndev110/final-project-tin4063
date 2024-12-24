@@ -4,13 +4,11 @@ use App\Controllers\AccountController;
 use App\Controllers\HomeController;
 use App\Controllers\PostController;
 use App\Controllers\SearchController;
-use App\Controllers\UserController;
 use App\Core\Router;
 
-// Usage:
 $router = new Router();
 
-// Add routes
+$router->addRoute('/', fn() => redirect('/home'));
 $router->addRoute('/home', [new HomeController(), 'index']);
 
 $router->addRoute('/post', [new PostController(), 'index']);

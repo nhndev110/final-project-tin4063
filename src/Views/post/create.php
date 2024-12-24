@@ -3,6 +3,12 @@
   <div class="col-8">
     <h1 class="fs-2 fw-bold mb-4">Tạo bài viết mới</h1>
     <form action="/post/save" method="post">
+      <div class="form-group mb-3">
+        <select class="form-select btn btn-outline-light fw-medium text-dark border w-25">
+          <option value="1" selected>Công khai</option>
+          <option value="0">Chỉ mình tôi</option>
+        </select>
+      </div>
       <div class="mb-3">
         <textarea rows="3"
           name="content"

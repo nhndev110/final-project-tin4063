@@ -46,6 +46,53 @@ abstract class BaseModel
   }
 
   /**
+   * - Thực thi một truy vấn SQL và trả về các bản ghi
+   * - **Cách sử dụng**: $this->query("SELECT * FROM ten_bang WHERE ten_cot = 'gia_tri'");
+   *
+   * @param string $sql
+   * @return array
+   */
+  public function query(string $sql)
+  {
+    $result = self::$connection->query($sql);
+
+    if (!$result) {
+      throw new Exception("Query failed: " . self::$connection->error);
+    }
+
+    return $result->fetch_all(MYSQLI_ASSOC);
+  }
+
+  /**
+   * Thực hiện các thao tác cơ sở dữ liệu như cập nhật, tạo mới và xóa.
+   *
+   * **Cách sử dụng**:
+   * - Cập nhật: $this->execute("UPDATE table_name SET column1 = ? WHERE id = ?", [$value1, $id]);
+   * - Tạo mới: $this->execute("INSERT INTO table_name (column1, column2) VALUES (?, ?)", [$value1, $value2]);
+   * - Xóa: $this->execute("DELETE FROM table_name WHERE id = ?", [$id]);
+   *
+   * @param string $sql Câu truy vấn SQL cần thực thi.
+   * @param array $params Một mảng kết hợp các tham số cần bind vào câu truy vấn.
+   * @return bool Trả về true nếu thành công, false nếu thất bại.
+   */
+  public function execute(string $sql, array $params): bool
+  {
+    $stmt = self::$connection->prepare($sql);
+
+    if (!$stmt) {
+      throw new Exception("Prepare statement failed: " . self::$connection->error);
+    }
+
+    $types = '';
+    foreach ($params as $param) {
+      $types .= is_int($param) ? 'i' : (is_double($param) ? 'd' : 's');
+    }
+
+    $stmt->bind_param($types, ...$params);
+    return $stmt->execute();
+  }
+
+  /**
    * Lấy tất cả các bản ghi từ bảng
    *
    * @return array

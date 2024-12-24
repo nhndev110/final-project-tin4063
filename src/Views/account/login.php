@@ -40,10 +40,6 @@
             </div>
             <button type="submit" class="btn btn-primary fw-bold w-100">Đăng nhập</button>
           </form>
-
-          <div class="text-center mt-3">
-            <a href="#" class="text-decoration-none text-muted">Quên mật khẩu?</a>
-          </div>
         </div>
 
         <div class="card mt-3 p-3 text-center shadow-sm">
