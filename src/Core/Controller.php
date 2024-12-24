@@ -8,6 +8,6 @@ class Controller
   {
     extract($data);
 
-    include APPROOT . "\src\Views\\$view_name.php";
+    include APP_ROOT . "\src\Views\\$view_name.php";
   }
 }

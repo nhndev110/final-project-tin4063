@@ -31,13 +31,23 @@
         aria-labelledby="pills-user-tab"
         tabindex="0">
         <?php for ($i = 1; $i <= 5; $i++): ?>
-          <?php FollowUserItemWithFollowers() ?>
+          <?php FollowUserItemWithFollowers(
+            "Nguyễn Hoàng Nhân",
+            "nguyenhoangnhan",
+            340,
+          ) ?>
         <?php endfor ?>
       </div>
     </div>
   </div>
   <div class="col-4" style="height: 100%;">
-    <?php FollowSuggestions() ?>
+    <?php FollowSuggestions([
+      ["username" => "nguyenvanan", "full_name" => "Nguyễn Văn An"],
+      ["username" => "tranthibich", "full_name" => "Trần Thị Bích"],
+      ["username" => "lehoangphong", "full_name" => "Lê Hoàng Phong"],
+      ["username" => "phamthihong", "full_name" => "Phạm Thị Hồng"],
+      ["username" => "hoangminhtuan", "full_name" => "Hoàng Minh Tuấn"]
+    ]) ?>
   </div>
 </div>
 <?php $content = ob_get_clean() ?>
