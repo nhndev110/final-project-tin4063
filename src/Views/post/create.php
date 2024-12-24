@@ -3,6 +3,12 @@
   <div class="col-8">
     <h1 class="fs-2 fw-bold mb-4">Tạo bài viết mới</h1>
     <form action="/post/save" method="post">
+      <div class="form-group mb-3">
+        <select class="form-select btn btn-outline-light fw-medium text-dark border w-25">
+          <option value="1" selected>Công khai</option>
+          <option value="0">Chỉ mình tôi</option>
+        </select>
+      </div>
       <div class="mb-3">
         <textarea rows="3"
           name="content"
@@ -33,24 +39,24 @@
 
       $previewContainer.empty();
 
-      $.each(files, function(index, file) {
+      Array.from(files).forEach(file => {
         if (file.type.startsWith("image/")) {
           const reader = new FileReader();
           reader.onload = function(e) {
-            const col = $("<div>")
-              .addClass("col-3 mb-3");
-
-            const img = $("<img>")
-              .addClass("border shadow")
-              .attr("src", e.target.result)
-              .attr("alt", file.name)
-              .css({
+            const col = $("<div>", {
+              class: "col-3 mb-3"
+            });
+            const img = $("<img>", {
+              class: "border shadow rounded",
+              src: e.target.result,
+              alt: file.name,
+              css: {
                 height: "150px",
                 objectFit: "cover",
-              });
+              }
+            });
 
             col.append(img);
-
             $previewContainer.append(col);
           };
           reader.readAsDataURL(file);

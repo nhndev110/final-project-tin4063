@@ -10,21 +10,25 @@
 </head>
 
 <body class="bg-light text-dark">
-
   <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="col-12 col-md-6 col-lg-4">
-      <!-- Signup Box -->
       <div class="border rounded p-4 bg-white shadow-sm">
         <h1 class="text-center fw-bold mb-3 fs-2" style="font-family: cursive;">H.N.L</h1>
         <p class="text-center">Đăng ký để xem ảnh và video từ bạn bè của bạn.</p>
 
-        <!-- Signup Form -->
-        <form>
+        <form method="post" action="/account/signup">
           <div class="mb-3">
             <input
               type="text"
               class="form-control"
-              placeholder="Tên đăng nhập"
+              placeholder="Họ và tên của bạn"
+              required />
+          </div>
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Tên người dùng"
               required />
           </div>
           <div class="mb-3">
@@ -46,20 +50,6 @@
               type="text"
               class="form-control"
               placeholder="Email của bạn"
-              required />
-          </div>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Họ và tên của bạn"
-              required />
-          </div>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Ngày sinh"
               required />
           </div>
           <div class="d-grid">

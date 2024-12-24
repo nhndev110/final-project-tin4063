@@ -5,6 +5,10 @@
 <head>
   <title>H.N.L - Mạng Xã Hội Dành Cho Người Việt</title>
   <meta charset="UTF-8" />
+  <meta name="description" content="Mạng xã hội dành cho người Việt" />
+  <meta name="keywords" content="mạng xã hội, việt nam, hnl" />
+  <meta name="author" content="H.N.L" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="/assets/plugins/fontawesome-free/css/all.min.css" rel="stylesheet" />
   <link href="/assets/plugins/bootstrap/bootstrap.min.css" rel="stylesheet" />
@@ -23,6 +27,11 @@
       flex-shrink: 0;
       width: auto;
     }
+
+    .no-focus-ring:focus {
+      outline: none;
+      box-shadow: none;
+    }
   </style>
   <?= $styles ?? "" ?>
 </head>
@@ -33,7 +42,7 @@
       <div class="row">
         <div class="col-3 position-fixed start-0 border-end" style="height: 100%;">
           <div id="sidebar" class="py-4">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/home">
               <h2 class="text-center fw-bold fs-2 m-0" style="font-family: cursive;">H.N.L</h2>
             </a>
             <p class="text-center">Mạng Xã Hội Dành Cho Người Việt</p>

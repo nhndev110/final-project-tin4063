@@ -8,7 +8,7 @@ class Router
 
   public function addRoute($pattern, $callback)
   {
-    $regex = '#^' . $pattern . '$#';
+    $regex = '#^' . $pattern . '(\?.*)?$#';
     $this->routes[$regex] = $callback;
   }
 
@@ -26,5 +26,8 @@ class Router
         return;
       }
     }
+
+    header("HTTP/1.0 404 Not Found");
+    echo "404 Not Found";
   }
 }
