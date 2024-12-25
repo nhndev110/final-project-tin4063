@@ -16,38 +16,38 @@
         <h1 class="text-center fw-bold mb-3 fs-2" style="font-family: cursive;">H.N.L</h1>
         <p class="text-center">Đăng ký để xem ảnh và video từ bạn bè của bạn.</p>
 
-        <form method="post" action="/account/signup">
+        <form method="post" action="/signup">
           <div class="mb-3">
-            <input
-              type="text"
+            <input type="text"
+              name="full_name"
               class="form-control"
               placeholder="Họ và tên của bạn"
               required />
           </div>
           <div class="mb-3">
-            <input
-              type="text"
+            <input type="text"
+              name="username"
               class="form-control"
               placeholder="Tên người dùng"
               required />
           </div>
           <div class="mb-3">
-            <input
-              type="password"
+            <input type="password"
+              name="password"
               class="form-control"
               placeholder="Mật khẩu"
               required />
           </div>
           <div class="mb-3">
-            <input
-              type="password"
+            <input type="password"
+              name="confirm_password"
               class="form-control"
               placeholder="Xác nhận mật khẩu"
               required />
           </div>
           <div class="mb-3">
-            <input
-              type="text"
+            <input type="text"
+              name="email"
               class="form-control"
               placeholder="Email của bạn"
               required />

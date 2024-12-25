@@ -6,7 +6,7 @@
         <img src="https://via.placeholder.com/200"
           alt="Profile Picture"
           class="rounded-circle"
-          style="width: 200px; height: 200px;">
+          style="width: 150px; height: 150px; object-fit: cover;">
       </div>
     </div>
 

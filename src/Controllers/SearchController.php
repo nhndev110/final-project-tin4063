@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Services\AuthService;
+
 class SearchController
 {
   public function index()
   {
-    view('search/index');
+    AuthService::checkAuthentication();
+    return view('Search/index');
   }
 }
