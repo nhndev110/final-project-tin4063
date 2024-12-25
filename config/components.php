@@ -2,6 +2,8 @@
   string $full_name,
   string $username,
   string $created_at,
+  int $post_id,
+  int $user_id,
   string $content,
   array $images,
   int $likes,
@@ -78,8 +80,9 @@
       </div>
       <div class="d-flex">
         <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
-        <form action="" class="d-flex flex-grow-1">
-          <input type="text" class="form-control rounded-pill flex-grow-1 no-focus-ring" placeholder="Viết bình luận...">
+        <form action="/post/<?= $post_id ?>/comment/create" method="post" class="d-flex flex-grow-1">
+          <input type="hidden" name="user_id" value="<?= $user_id ?>">
+          <input type="text" name="content" class="form-control rounded-pill flex-grow-1 no-focus-ring" placeholder="Viết bình luận...">
           <button class="btn ms-1 rounded-circle">
             <i class="fa-solid fa-paper-plane text-primary"></i>
           </button>
