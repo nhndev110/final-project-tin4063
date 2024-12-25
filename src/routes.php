@@ -4,6 +4,7 @@ use App\Controllers\AccountController;
 use App\Controllers\HomeController;
 use App\Controllers\PostController;
 use App\Controllers\SearchController;
+use App\Controllers\UserController;
 use App\Core\Router;
 
 $router = new Router();
@@ -21,3 +22,6 @@ $router->addRoute('/profile', [new AccountController(), 'profile']);
 $router->addRoute('/login', [new AccountController(), 'login']);
 $router->addRoute('/signup', [new AccountController(), 'signup']);
 $router->addRoute('/logout', [new AccountController(), 'logout']);
+
+$router->addRoute('/follow/create/(\d+)', [new UserController(), 'follow']);
+$router->addRoute('/follow/delete/(\d+)', [new UserController(), 'unfollow']);
