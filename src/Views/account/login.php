@@ -31,7 +31,7 @@
       <div class="col-md-6">
         <div class="card p-4 shadow-sm">
           <h1 class="text-center mb-3 fw-bold fs-2" style="font-family: cursive;">H.N.L</h1>
-          <form action="" method="post">
+          <form action="/login" method="post">
             <div class="mb-3">
               <input type="text" name="email" class="form-control" placeholder="Email" />
             </div>
