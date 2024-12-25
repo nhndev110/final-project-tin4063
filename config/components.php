@@ -2,6 +2,8 @@
   string $full_name,
   string $username,
   string $created_at,
+  int $post_id,
+  int $user_id,
   string $content,
   array $images,
   int $likes,
@@ -78,8 +80,9 @@
       </div>
       <div class="d-flex">
         <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
-        <form action="" class="d-flex flex-grow-1">
-          <input type="text" class="form-control rounded-pill flex-grow-1 no-focus-ring" placeholder="Viết bình luận...">
+        <form action="/post/<?= $post_id ?>/comment/create" method="post" class="d-flex flex-grow-1">
+          <input type="hidden" name="user_id" value="<?= $user_id ?>">
+          <input type="text" name="content" class="form-control rounded-pill flex-grow-1 no-focus-ring" placeholder="Viết bình luận...">
           <button class="btn ms-1 rounded-circle">
             <i class="fa-solid fa-paper-plane text-primary"></i>
           </button>
@@ -106,7 +109,8 @@
 <?php function FollowUserItemWithFollowers(
   string $username,
   string $full_name,
-  int $followers
+  int $followers,
+  int $followed_id
 ) { ?>
   <div class="d-flex align-items-center mb-4">
     <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
@@ -116,7 +120,7 @@
       <span class="fw-bolder">&#183;</span>
       <small class="text-muted"><?= htmlspecialchars($followers); ?> Người theo dõi</small>
     </div>
-    <a href="#" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">Theo dõi</a>
+    <a href="/follow/create/<?= $followed_id ?>" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">Theo dõi</a>
   </div>
 <?php } ?>
 
