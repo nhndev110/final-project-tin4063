@@ -41,7 +41,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-3 position-fixed start-0 border-end" style="height: 100%;">
-          <div id="sidebar" class="py-4">
+          <div id="sidebar" class="py-4 d-flex flex-column" style="height: 100%;">
             <a class="navbar-brand" href="/home">
               <h2 class="text-center fw-bold fs-2 m-0" style="font-family: cursive;">H.N.L</h2>
             </a>
@@ -63,6 +63,12 @@
               <a href="/profile" class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/profile') ? 'active' : '' ?> mt-2 border">
                 <i class="fa-regular fa-user"></i>
                 <span class="ms-1">Hồ sơ</span>
+              </a>
+            </div>
+            <div class="mt-auto">
+              <a href="/logout" class="w-100 btn btn-danger rounded-pill">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span class="ms-1">Đăng xuất</span>
               </a>
             </div>
           </div>

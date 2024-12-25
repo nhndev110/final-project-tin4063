@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Services\AuthService;
+
 class HomeController
 {
   public function index()
   {
-    view("home/index");
+    AuthService::checkAuthentication();
+    return view("Home/index");
   }
 }
