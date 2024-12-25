@@ -109,7 +109,8 @@
 <?php function FollowUserItemWithFollowers(
   string $username,
   string $full_name,
-  int $followers
+  int $followers,
+  int $followed_id
 ) { ?>
   <div class="d-flex align-items-center mb-4">
     <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
@@ -119,7 +120,7 @@
       <span class="fw-bolder">&#183;</span>
       <small class="text-muted"><?= htmlspecialchars($followers); ?> Người theo dõi</small>
     </div>
-    <a href="#" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">Theo dõi</a>
+    <a href="/follow/create/<?= $followed_id ?>" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">Theo dõi</a>
   </div>
 <?php } ?>
 
