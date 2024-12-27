@@ -34,14 +34,16 @@ class DB
   }
 
   /**
-   * - Thực thi một truy vấn SQL và trả về các bản ghi
-   * - **Cách sử dụng**: $this->query("SELECT * FROM ten_bang WHERE ten_cot = ?", [$value]);
+   * Thực thi một truy vấn SQL và trả về các bản ghi
+   *
+   * **Cách sử dụng**:
+   *
+   * `$result = DB::query("SELECT * FROM ten_bang WHERE ten_cot = ?", [$value]);`
    *
    * @param string $sql Câu truy vấn SQL cần thực thi.
-   * @param array $params Một mảng kết hợp các tham số cần bind vào câu truy vấn.
    * @return array
    */
-  public static function query(string $sql, array $params = [])
+  public static function query(string $sql, array $params = []): array
   {
     if (is_null(self::$connection)) self::connect();
     $stmt = self::$connection->prepare($sql);
@@ -65,18 +67,18 @@ class DB
   }
 
   /**
-   * Thực hiện các thao tác cơ sở dữ liệu như cập nhật, tạo mới và xóa.
+   * Thực thi câu truy vấn SQL với các tham số được bind.
    *
-   * **Cách sử dụng**:
-   * - Cập nhật: $this->execute("UPDATE table_name SET column1 = ? WHERE id = ?", [$value1, $id]);
-   * - Tạo mới: $this->execute("INSERT INTO table_name (column1, column2) VALUES (?, ?)", [$value1, $value2]);
-   * - Xóa: $this->execute("DELETE FROM table_name WHERE id = ?", [$id]);
+   * Cách sử dụng:
+   * - Cập nhật: `DB::execute("UPDATE table_name SET column1 = ? WHERE id = ?", [$value1, $id]);`
+   * - Tạo mới: `DB::execute("INSERT INTO table_name (column1, column2) VALUES (?, ?)", [$value1, $value2]);`
+   * - Xóa: `DB::execute("DELETE FROM table_name WHERE id = ?", [$id]);`
    *
    * @param string $sql Câu truy vấn SQL cần thực thi.
-   * @param array $params Một mảng kết hợp các tham số cần bind vào câu truy vấn.
+   * @param array $params Một mảng các tham số cần bind vào câu truy vấn.
    * @return bool Trả về true nếu thành công, false nếu thất bại.
    */
-  public static function execute(string $sql, array $params): bool
+  public static function execute(string $sql, array $params = []): bool
   {
     if (is_null(self::$connection)) self::connect();
     $stmt = self::$connection->prepare($sql);
@@ -85,12 +87,14 @@ class DB
       throw new Exception("Prepare statement failed: " . self::$connection->error);
     }
 
-    $types = '';
-    foreach ($params as $param) {
-      $types .= is_int($param) ? 'i' : (is_double($param) ? 'd' : 's');
+    if (!empty($params)) {
+      $types = '';
+      foreach ($params as $param) {
+        $types .= is_int($param) ? 'i' : (is_double($param) ? 'd' : 's');
+      }
+      $stmt->bind_param($types, ...$params);
     }
 
-    $stmt->bind_param($types, ...$params);
     return $stmt->execute();
   }
 }

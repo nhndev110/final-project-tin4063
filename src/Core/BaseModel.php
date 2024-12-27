@@ -24,7 +24,7 @@ abstract class BaseModel
    */
   public function __construct()
   {
-    self::$connection = DB::getConnection();
+    if (is_null(self::$connection)) self::$connection = DB::getConnection();
 
     if (empty($this->table)) {
       throw new Exception("The \$table property must be defined in the subclass " . static::class);
@@ -39,13 +39,7 @@ abstract class BaseModel
   public static function all(): array
   {
     $sql = "SELECT * FROM " . (new static())->table;
-    $result = self::$connection->query($sql);
-
-    if (!$result) {
-      throw new Exception("Query failed: " . self::$connection->error);
-    }
-
-    return $result->fetch_all(MYSQLI_ASSOC);
+    return DB::query($sql);
   }
 
   /**
@@ -57,26 +51,26 @@ abstract class BaseModel
   public static function find(int $id)
   {
     $sql = "SELECT * FROM " . (new static())->table . " WHERE id = ?";
-    $stmt = self::$connection->prepare($sql);
-
-    if (!$stmt) {
-      throw new Exception("Prepare statement failed: " . self::$connection->error);
-    }
-
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    return $result->fetch_assoc() ?: null;
+    return DB::query($sql, [$id])[0] ?? null;
   }
 
   /**
-   * Thêm một bản ghi mới
+   * Thêm một bản ghi mới vào bảng tương ứng.
    *
-   * @param array $data
-   * @return bool
+   * @param array $data Mảng dữ liệu chứa các cặp khóa-giá trị tương ứng với các cột và giá trị cần thêm vào bảng.
+   * @return int Trả về ID của bản ghi vừa được thêm vào nếu thành công, ngược lại trả về 0.
+   *
+   * Cách sử dụng:
+   *
+   * $data = [
+   *     'column1' => 'value1',
+   *     'column2' => 'value2',
+   *     // ...
+   * ];
+   *
+   * $id = BaseModel::create($data);
    */
-  public static function create(array $data): bool
+  public static function create(array $data): int
   {
     $table = (new static())->table;
     $columns = implode(', ', array_keys($data));
@@ -91,7 +85,7 @@ abstract class BaseModel
     }
 
     $stmt->bind_param($types, ...array_values($data));
-    return $stmt->execute();
+    return $stmt->execute() ? self::$connection->insert_id : 0;
   }
 
   /**
@@ -105,17 +99,9 @@ abstract class BaseModel
   {
     $table = (new static())->table;
     $updates = implode(', ', array_map(fn($key) => "$key = ?", array_keys($data)));
-    $types = str_repeat('s', count($data)) . 'i';
 
     $sql = "UPDATE $table SET $updates WHERE id = ?";
-    $stmt = self::$connection->prepare($sql);
-
-    if (!$stmt) {
-      throw new Exception("Prepare statement failed: " . self::$connection->error);
-    }
-
-    $stmt->bind_param($types, ...array_merge(array_values($data), [$id]));
-    return $stmt->execute();
+    return DB::execute($sql, array_merge(array_values($data), [$id]));
   }
 
   /**
@@ -127,14 +113,8 @@ abstract class BaseModel
   public static function delete(int $id): bool
   {
     $table = (new static())->table;
+
     $sql = "DELETE FROM $table WHERE id = ?";
-    $stmt = self::$connection->prepare($sql);
-
-    if (!$stmt) {
-      throw new Exception("Prepare statement failed: " . self::$connection->error);
-    }
-
-    $stmt->bind_param('i', $id);
-    return $stmt->execute();
+    return DB::execute($sql, [$id]);
   }
 }

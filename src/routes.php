@@ -13,16 +13,20 @@ $router = new Router();
 $router->addRoute('/', fn() => redirect('/home'));
 $router->addRoute('/home', [new HomeController(), 'index']);
 
-$router->addRoute('/post/create', [new PostController(), 'create']);
-$router->addRoute('/post/update/(\d+)', [new PostController(), 'update']);
-$router->addRoute('/post/delete/(\d+)', [new PostController(), 'delete']);
+$router->addRoute('/posts/create', [new PostController(), 'create']);
+$router->addRoute('/posts/(\d+)/update', [new PostController(), 'update']);
+$router->addRoute('/posts/save', [new PostController(), 'save']);
+$router->addRoute('/posts/(\d+)/delete', [new PostController(), 'delete']);
+$router->addRoute('/posts/(\d+)/comment/create', [new CommentController(), 'create']);
+$router->addRoute('/posts/(\d+)/comment', [new CommentController(), 'index']);
+$router->addRoute('/posts/(\d+)/like', [new PostController(), 'like']);
+
 $router->addRoute('/search', [new SearchController(), 'index']);
 
-$router->addRoute('/profile', [new AccountController(), 'profile']);
+$router->addRoute('/users/(.*)', [new UserController(), 'profile']);
+$router->addRoute('/users/follow/(\d+)', [new UserController(), 'follow']);
+$router->addRoute('/users/unfollow/(\d+)', [new UserController(), 'unfollow']);
+
 $router->addRoute('/login', [new AccountController(), 'login']);
 $router->addRoute('/signup', [new AccountController(), 'signup']);
 $router->addRoute('/logout', [new AccountController(), 'logout']);
-
-$router->addRoute('/follow/create/(\d+)', [new UserController(), 'follow']);
-$router->addRoute('/follow/delete/(\d+)', [new UserController(), 'unfollow']);
-$router->addRoute('/post/(\d+)/comment/create', [new CommentController(), 'create']);

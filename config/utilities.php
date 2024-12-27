@@ -15,12 +15,41 @@ function view($view, $data = [])
   }
 }
 
-
-/**
- * Điều hướng sang trang khác
- */
-function redirect($url)
+function redirect(string $url)
 {
   header("Location: $url");
   return;
+}
+
+function redirect_with_error(string $url, array $error = [])
+{
+  $_SESSION['error'] = $error;
+  header("Location: $url");
+  return;
+}
+
+function redirect_back()
+{
+  header("Location: {$_SERVER['HTTP_REFERER']}");
+  return;
+}
+
+function exists_error($key)
+{
+  return isset($_SESSION['error'][$key]);
+}
+
+function error($key)
+{
+  $error = $_SESSION['error'][$key] ?? '';
+  unset($_SESSION['error'][$key]);
+  return $error;
+}
+
+function dd($data)
+{
+  echo '<pre>';
+  var_dump($data);
+  echo '</pre>';
+  die();
 }
