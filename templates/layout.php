@@ -1,12 +1,15 @@
-<!-- /templates/layout.php -->
+<?php
+
+use App\Services\AuthService;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <title>H.N.L - Mạng Xã Hội Dành Cho Người Việt</title>
+  <title>H.N.L - Nơi Kết Nối Những Trái Tim Cô Đơn</title>
   <meta charset="UTF-8" />
-  <meta name="description" content="Mạng xã hội dành cho người Việt" />
-  <meta name="keywords" content="mạng xã hội, việt nam, hnl" />
+  <meta name="description" content="Nơi Kết Nối Những Trái Tim Cô Đơn" />
+  <meta name="keywords" content="mạng xã hội, hnl" />
   <meta name="author" content="H.N.L" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,6 +35,34 @@
       outline: none;
       box-shadow: none;
     }
+
+    .btn-like,
+    .btn-comment {
+      transition: .3s;
+    }
+
+    .btn-like:hover,
+    .btn-comment:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .comments::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .comments::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .comments::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 4px;
+    }
+
+    .comments::-webkit-scrollbar-thumb:hover {
+      background-color: #999;
+    }
   </style>
   <?= $styles ?? "" ?>
 </head>
@@ -45,22 +76,25 @@
             <a class="navbar-brand" href="/home">
               <h2 class="text-center fw-bold fs-2 m-0" style="font-family: cursive;">H.N.L</h2>
             </a>
-            <p class="text-center">Mạng Xã Hội Dành Cho Người Việt</p>
+            <p class="text-center">Nơi Kết Nối Những Trái Tim Cô Đơn</p>
             <div class="list-group mt-4">
               <?php $uri = $_SERVER['REQUEST_URI'] ?>
               <a href="/home" class="list-group-item list-group-item-action <?= str_starts_with($uri, '/home') ? 'active' : '' ?> rounded-pill border">
                 <i class="fa-solid fa-house"></i>
                 <span class="ms-1">Trang chủ</span>
               </a>
-              <a href="/search" class="list-group-item list-group-item-action <?= str_starts_with($uri, '/search') ? 'active' : '' ?> rounded-pill mt-2 border">
+              <a href="/search"
+                class="list-group-item list-group-item-action <?= str_starts_with($uri, '/search') ? 'active' : '' ?> rounded-pill mt-2 border">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <span class="ms-1">Tìm kiếm</span>
               </a>
-              <a href="/post/create" class="list-group-item list-group-item-action <?= str_starts_with($uri, '/post/create') ? 'active' : '' ?> rounded-pill mt-2 border">
+              <a href="/posts/create"
+                class="list-group-item list-group-item-action <?= str_starts_with($uri, '/posts/create') ? 'active' : '' ?> rounded-pill mt-2 border">
                 <i class="fa-regular fa-square-plus"></i>
                 <span class="ms-1">Tạo mới</span>
               </a>
-              <a href="/profile" class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/profile') ? 'active' : '' ?> mt-2 border">
+              <a href="/users/<?= AuthService::user()['username'] ?>"
+                class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/users') ? 'active' : '' ?> mt-2 border">
                 <i class="fa-regular fa-user"></i>
                 <span class="ms-1">Hồ sơ</span>
               </a>

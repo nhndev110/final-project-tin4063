@@ -8,7 +8,7 @@ class Router
 
   public function addRoute($pattern, $callback)
   {
-    $regex = '#^' . $pattern . '(\?.*)?$#';
+    $regex = '#^' . "$pattern(.*)" . '$#';
     $this->routes[$regex] = $callback;
   }
 

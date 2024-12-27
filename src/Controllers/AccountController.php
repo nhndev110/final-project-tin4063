@@ -12,8 +12,18 @@ class AccountController
       $email = $_POST["email"];
       $password = $_POST["password"];
 
+      if (empty($email) || empty($password)) {
+        return redirect_with_error("/login", [
+          "message" => "Email hoặc mật khẩu không được để trống"
+        ]);
+      }
+
       if (AuthService::login($email, $password)) {
         return redirect("/home");
+      } else {
+        return redirect_with_error("/login", [
+          "message" => "Email hoặc mật khẩu không chính xác"
+        ]);
       }
     }
 
@@ -51,11 +61,5 @@ class AccountController
     AuthService::checkAuthentication();
     AuthService::logout();
     return redirect("/login");
-  }
-
-  public function profile()
-  {
-    AuthService::checkAuthentication();
-    return view("Account/profile");
   }
 }
