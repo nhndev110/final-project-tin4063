@@ -1,3 +1,7 @@
+<?php
+
+use App\Services\AuthService;
+?>
 <?php ob_start() ?>
 <div class="row">
   <div class="col-8">
@@ -9,7 +13,7 @@
         <input type="text"
           class="form-control shadow-none border border-start-0 rounded-end-pill px-0"
           placeholder="Tìm kiếm người dùng ..."
-          name="search" />
+          name="search" autocomplete="off" autofocus />
       </div>
     </form>
     <ul class="nav nav-tabs my-3" id="pills-tab" role="tablist">
@@ -35,19 +39,23 @@
             "Nguyễn Hoàng Nhân",
             "nguyenhoangnhan",
             340,
+            1,
           ) ?>
         <?php endfor ?>
       </div>
     </div>
   </div>
-  <div class="col-4" style="height: 100%;">
-    <?php FollowSuggestions([
-      ["username" => "nguyenvanan", "full_name" => "Nguyễn Văn An"],
-      ["username" => "tranthibich", "full_name" => "Trần Thị Bích"],
-      ["username" => "lehoangphong", "full_name" => "Lê Hoàng Phong"],
-      ["username" => "phamthihong", "full_name" => "Phạm Thị Hồng"],
-      ["username" => "hoangminhtuan", "full_name" => "Hoàng Minh Tuấn"]
-    ]) ?>
+  <div class="col-4">
+    <div class="d-flex align-items-center mb-4 p-3 bg-light rounded shadow-sm">
+      <img src="/assets/images/no-avatar.png"
+        class="rounded-circle me-3 border border-secondary"
+        alt="User"
+        style="width: 50px; height: 50px; object-fit: cover;" />
+      <div class="flex-grow-1">
+        <h6 class="mb-0 fw-bold"><?= htmlspecialchars(AuthService::user()['username']); ?></h6>
+        <small class="text-muted"><?= htmlspecialchars(AuthService::user()['full_name']); ?></small>
+      </div>
+    </div>
   </div>
 </div>
 <?php $content = ob_get_clean() ?>

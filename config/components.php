@@ -1,19 +1,41 @@
-<?php function Post(
+<?php
+
+use App\Services\AuthService;
+use App\Services\LikeService;
+
+/**
+ * Tạo một bài viết mới.
+ *
+ * @param int $user_id ID của người dùng đã tạo bài viết.
+ * @param string $full_name Tên đầy đủ của người dùng.
+ * @param string $username Tên đăng nhập của người dùng.
+ * @param int $post_id ID của bài viết.
+ * @param string $content Nội dung của bài viết.
+ * @param string $created_at Ngày và giờ tạo bài viết.
+ * @param int $likes Số lượt thích mà bài viết đã nhận được.
+ * @param array $images Một mảng các hình ảnh liên quan đến bài viết.
+ * @param array $comments Một mảng các bình luận về bài viết.
+ * @param bool $status Trạng thái của bài viết (ví dụ: đã xuất bản hay chưa).
+ */
+function Post(
+  int $user_id,
   string $full_name,
   string $username,
-  string $created_at,
   int $post_id,
-  int $user_id,
   string $content,
-  array $images,
+  string $created_at,
   int $likes,
+  array $images,
   array $comments,
   bool $status
 ) { ?>
   <div class="card shadow-sm mb-4">
-    <div class="card-body">
+    <div class="card-body pb-2">
       <div class="d-flex align-items-center mb-2">
-        <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
+        <img src="/assets/images/no-avatar.png"
+          class="rounded-circle me-3"
+          alt="User"
+          style="height: 40px; width: 40px; object-fit: cover;">
         <div>
           <h6 class="mb-0"><?= htmlspecialchars($full_name); ?></h6>
           <small class="text-muted">
@@ -26,14 +48,24 @@
             <?php endif; ?>
           </small>
         </div>
-        <?php if (isset($_SESSION['loggedInUsername']) && $username === $_SESSION['loggedInUsername']): ?>
+        <?php if (AuthService::isLoggedIn() && AuthService::user()['username'] === $username): ?>
           <div class="dropdown ms-auto">
             <button class="btn btn-outline-light text-dark rounded-circle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-ellipsis"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">Chỉnh sửa</a></li>
-              <li><a class="dropdown-item" href="#">Xoá bài viết</a></li>
+              <li>
+                <a class="dropdown-item fw-medium" href="#">
+                  <i class="fa-solid fa-pen"></i>
+                  <span class="ms-1">Chỉnh sửa</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item fw-medium" href="/posts/<?= $post_id ?>/delete">
+                  <i class="fa-solid fa-trash-can"></i>
+                  <span class="ms-1">Xoá bài viết</span>
+                </a>
+              </li>
             </ul>
           </div>
         <?php endif; ?>
@@ -42,47 +74,64 @@
         <?= htmlspecialchars($content); ?>
       </p>
       <?php if (!empty($images)): ?>
-        <div class="swiper-container overflow-hidden mb-3">
+        <div class="swiper-container overflow-hidden mb-2">
           <div class="swiper-wrapper">
             <?php foreach ($images as $image): ?>
-              <div class="user-select-none swiper-slide">
-                <img src="<?= htmlspecialchars($image); ?>"
-                  alt="Image" class="rounded img-fluid"
-                  style="width: 150px; height: 150px; object-fit: cover;" />
-              </div>
+              <?php if (is_array($image) && isset($image['photo'])): ?>
+                <div class="user-select-none swiper-slide">
+                  <img src="/assets/images/posts/<?= $post_id ?>/<?= $image['photo'] ?>"
+                    alt="Image" class="rounded"
+                    style="width: 150px; height: 150px; object-fit: cover;" />
+                </div>
+              <?php endif; ?>
             <?php endforeach; ?>
           </div>
         </div>
       <?php endif; ?>
       <div class="d-flex justify-content-between align-items-center">
-        <a href="#" class="text-decoration-none text-primary">
-          <i class="fa-solid fa-thumbs-up"></i>
-          <span class="fw-medium ms-1">Thích (<?= htmlspecialchars($likes); ?>)</span>
-        </a>
-        <a href="#" class="text-decoration-none text-dark">
+        <?php if (LikeService::isPostLiked($post_id)) : ?>
+          <a href="/posts/<?= $post_id ?>/like" class="btn-like text-decoration-none py-1 px-3 rounded">
+            <i class="fa-solid fa-thumbs-up"></i>
+            <span class="fw-medium ms-1">Thích (<?= LikeService::countLikes($post_id) ?>)</span>
+          </a>
+        <?php else: ?>
+          <a href="/posts/<?= $post_id ?>/like" class="btn-like text-dark text-decoration-none py-1 px-3 rounded">
+            <i class="fa-regular fa-thumbs-up"></i>
+            <span class="fw-medium ms-1">Thích (<?= LikeService::countLikes($post_id) ?>)</span>
+          </a>
+        <?php endif ?>
+        <div href="#" class="text-decoration-none text-dark py-1 px-3">
           <i class="fa-regular fa-comments"></i>
           <span class="fw-medium">Bình luận (<?= count($comments); ?>)</span>
-        </a>
+        </div>
       </div>
     </div>
-    <div class="card-footer bg-white p-3">
-      <div class="comments">
+    <div class="card-footer bg-white p-0">
+      <div class="comments px-3" style="max-height: 300px; overflow-y: auto;">
         <?php foreach ($comments as $comment): ?>
-          <div class="d-flex mb-3">
-            <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User" style="height: 40px; width: auto;">
+          <div class="d-flex my-3">
+            <img src="/assets/images/no-avatar.png"
+              class="rounded-circle me-3"
+              alt="User"
+              style="height: 40px; width: 40px; object-fit: cover;" />
             <div>
-              <h6 class="mb-0"><?= htmlspecialchars($comment['full_name']); ?></h6>
-              <small class="text-muted"><?= htmlspecialchars($comment['created_at']); ?></small>
-              <p class="mb-0"><?= htmlspecialchars($comment['content']); ?></p>
+              <h6 class="mb-0"><?= htmlspecialchars($comment['user']['full_name']) ?></h6>
+              <small class="text-muted"><?= htmlspecialchars($comment['created_at']) ?></small>
+              <p class="mb-0"><?= htmlspecialchars($comment['content']) ?></p>
             </div>
           </div>
         <?php endforeach; ?>
       </div>
-      <div class="d-flex">
-        <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
-        <form action="/post/<?= $post_id ?>/comment/create" method="post" class="d-flex flex-grow-1">
+      <div class="d-flex px-3 py-2 border-top">
+        <img src="/assets/images/no-avatar.png"
+          class="rounded-circle me-3"
+          alt="User"
+          style="height: 40px; width: 40px; object-fit: cover;" />
+        <form action="/posts/<?= $post_id ?>/comment/create" method="post" class="d-flex flex-grow-1">
           <input type="hidden" name="user_id" value="<?= $user_id ?>">
-          <input type="text" name="content" class="form-control rounded-pill flex-grow-1 no-focus-ring" placeholder="Viết bình luận...">
+          <input type="text" name="content"
+            class="form-control rounded-pill flex-grow-1 no-focus-ring"
+            placeholder="Viết bình luận..." autocomplete="off" />
           <button class="btn ms-1 rounded-circle">
             <i class="fa-solid fa-paper-plane text-primary"></i>
           </button>
@@ -92,47 +141,26 @@
   </div>
 <?php } ?>
 
-<?php function FollowUserItem(
-  string $username,
-  string $full_name
-) { ?>
-  <div class="d-flex align-items-center mb-3">
-    <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
-    <div class="flex-grow-1">
-      <h6 class="mb-0"><?= htmlspecialchars($username); ?></h6>
-      <small class="text-muted"><?= htmlspecialchars($full_name); ?></small>
-    </div>
-    <a href="#" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">Theo dõi</a>
-  </div>
-<?php } ?>
-
 <?php function FollowUserItemWithFollowers(
-  string $username,
   string $full_name,
+  string $username,
   int $followers,
   int $followed_id
 ) { ?>
   <div class="d-flex align-items-center mb-4">
-    <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="User">
+    <img src="/assets/images/no-avatar.png"
+      class="rounded-circle me-3"
+      alt="User"
+      style="width: 40px; height: 40px; object-fit: cover;" />
     <div class="flex-grow-1">
       <h6 class="mb-0"><?= htmlspecialchars($username); ?></h6>
       <small class="text-muted"><?= htmlspecialchars($full_name); ?></small>
       <span class="fw-bolder">&#183;</span>
       <small class="text-muted"><?= htmlspecialchars($followers); ?> Người theo dõi</small>
     </div>
-    <a href="/follow/create/<?= $followed_id ?>" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">Theo dõi</a>
-  </div>
-<?php } ?>
-
-<?php function FollowSuggestions(
-  array $suggestions
-) { ?>
-  <div class="container mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h6 class="mb-0">Gợi ý theo dõi</h6>
-    </div>
-    <?php foreach ($suggestions as $suggestion): ?>
-      <?php FollowUserItem($suggestion['username'], $suggestion['full_name']); ?>
-    <?php endforeach; ?>
+    <a href="/follow/create/<?= $followed_id ?>" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">
+      <i class="fa-solid fa-user-plus"></i>
+      <span>Theo dõi</span>
+    </a>
   </div>
 <?php } ?>
