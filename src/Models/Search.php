@@ -8,9 +8,9 @@ use App\Core\DB;
 class Search extends BaseModel
 {
   protected string $table = "users";
-  public static function findByName($full_name, $username)
+  public static function findByName($query)
   {
-    $sql = "select * from users where full_name  = ? or username = ?";
-    return DB::query($sql, [$full_name, $username]);
+    $sql = "SELECT * FROM users WHERE full_name LIKE ? OR username LIKE ?";
+    return DB::query($sql, ["%$query%", "%$query%"]);
   }
 }

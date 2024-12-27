@@ -6,16 +6,26 @@ use App\Models\Follow;
 
 class FollowService
 {
-  public static function followUser(int $follower_id, $followed_id)
+  public static function createFollow($follow_id)
   {
     return Follow::create([
-      "follower_id" => $follower_id,
-      "followed_id" => $followed_id
+      "follow_id" => $follow_id,
+      "user_id" => AuthService::user()['id']
     ]);
   }
 
-  public static function unfollowUser($follower_id, $followed_id)
+  public static function isFollow($follow_id)
   {
-    return Follow::unfolow($follower_id, $followed_id);
+    return !empty(Follow::findByFollow($follow_id, AuthService::user()['id']));
+  }
+
+  public static function deleteFollow($follow_id)
+  {
+    return Follow::deleteByFollow($follow_id, AuthService::user()['id']);
+  }
+
+  public static function countFollows($follower_id)
+  {
+    return Follow::countByFollow($follower_id);
   }
 }

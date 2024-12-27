@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\AuthService;
+use App\Services\FollowService;
+
 ?>
 <?php ob_start() ?>
 <div class="row">
@@ -13,7 +15,8 @@ use App\Services\AuthService;
         <input type="text"
           class="form-control shadow-none border border-start-0 rounded-end-pill px-0"
           placeholder="Tìm kiếm người dùng ..."
-          name="search" autocomplete="off" autofocus />
+          value="<?= $_GET['q'] ?? '' ?>"
+          name="q" autocomplete="off" autofocus />
       </div>
     </form>
     <ul class="nav nav-tabs my-3" id="pills-tab" role="tablist">
@@ -34,14 +37,18 @@ use App\Services\AuthService;
         role="tabpanel"
         aria-labelledby="pills-user-tab"
         tabindex="0">
-        <?php for ($i = 1; $i <= 5; $i++): ?>
-          <?php FollowUserItemWithFollowers(
-            "Nguyễn Hoàng Nhân",
-            "nguyenhoangnhan",
-            340,
-            1,
-          ) ?>
-        <?php endfor ?>
+        <?php foreach ($users as $user): ?>
+          <?php
+          $followerCount = FollowService::countFollows($user['id']);
+          FollowUserItemWithFollowers(
+            $user['full_name'],
+            $user['username'],
+            $followerCount,
+            $user['id']
+          );
+          ?>
+        <?php endforeach; ?>
+
       </div>
     </div>
   </div>

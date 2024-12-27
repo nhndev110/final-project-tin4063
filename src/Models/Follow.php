@@ -9,9 +9,19 @@ class Follow extends BaseModel
 {
   protected string $table = "follows";
 
-  public static function unfolow($follower_id, $followed_id)
+  public static function deleteByFollow($follower_id, $followed_id)
   {
-    $sql = "delete from follows where follower_id = ? and followed_id = ?";
+    $sql = "DELETE FROM follows WHERE follower_id = ? AND followed_id = ?";
     return DB::execute($sql, [$follower_id, $followed_id]);
+  }
+  public static function findByFollow($follower_id, $followed_id)
+  {
+    $sql = "SELECT * FROM follows WHERE follower_id = ? AND followed_id = ?";
+    return DB::query($sql, [$follower_id, $followed_id]);
+  }
+  public static function countByFollow($follower_id)
+  {
+    $sql = "SELECT COUNT(*) as total FROM follows WHERE follower_id = ?";
+    return DB::query($sql, [$follower_id])[0]['total'] ?? 0;
   }
 }
