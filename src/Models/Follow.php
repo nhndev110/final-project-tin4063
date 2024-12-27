@@ -9,7 +9,7 @@ class Follow extends BaseModel
 {
   protected string $table = "follows";
 
-  public static function unfolow($follower_id, $followed_id)
+  public static function unfollow($follower_id, $followed_id)
   {
     $sql = "delete from follows where follower_id = ? and followed_id = ?";
     return DB::execute($sql, [$follower_id, $followed_id]);

@@ -16,6 +16,6 @@ class FollowService
 
   public static function unfollowUser($follower_id, $followed_id)
   {
-    return Follow::unfolow($follower_id, $followed_id);
+    return Follow::unfollow($follower_id, $followed_id);
   }
 }
