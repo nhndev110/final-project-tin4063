@@ -4,11 +4,12 @@ namespace App\Services;
 
 class AuthService
 {
-  public static function login(string $email, string $password)
+  public static function login(string $email, string $password): bool
   {
     $user = UserService::findUserByEmail($email);
     if ($user !== null && password_verify($password, $user['password'])) {
       $_SESSION['user'] = [
+        'id' => $user['id'],
         'full_name' => $user['full_name'],
         'username' => $user['username'],
         'email' => $user['email'],
@@ -27,7 +28,7 @@ class AuthService
   ) {
     $password = password_hash($password, PASSWORD_DEFAULT);
 
-    UserService::createUser([
+    $user_id = UserService::createUser([
       "full_name" => $full_name,
       "username" => $username,
       "password" => $password,
@@ -35,6 +36,7 @@ class AuthService
     ]);
 
     $_SESSION["user"] = [
+      "id" => $user_id,
       "full_name" => $full_name,
       "username" => $username,
       "email" => $email,
