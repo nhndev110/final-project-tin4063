@@ -21,6 +21,12 @@ function redirect(string $url)
   return;
 }
 
+function redirect_back()
+{
+  header("Location: {$_SERVER['HTTP_REFERER']}");
+  return;
+}
+
 function redirect_with_error(string $url, array $error = [])
 {
   $_SESSION['error'] = $error;
@@ -28,9 +34,11 @@ function redirect_with_error(string $url, array $error = [])
   return;
 }
 
-function redirect_back()
+function redirect_with_error_and_input(string $url, array $error = [], array $input = [])
 {
-  header("Location: {$_SERVER['HTTP_REFERER']}");
+  $_SESSION['error'] = $error;
+  $_SESSION['old'] = $input;
+  header("Location: $url");
   return;
 }
 
@@ -44,6 +52,13 @@ function error($key)
   $error = $_SESSION['error'][$key] ?? '';
   unset($_SESSION['error'][$key]);
   return $error;
+}
+
+function old($key)
+{
+  $old = $_SESSION['old'][$key] ?? '';
+  unset($_SESSION['old'][$key]);
+  return $old;
 }
 
 function dd($data)

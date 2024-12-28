@@ -36,4 +36,21 @@ class UploadService
 
     return $files_name;
   }
+
+  public static function uploadFile($file, $directory_path): string
+  {
+    $directory_path = APP_ROOT . $directory_path;
+    if (!is_dir($directory_path)) {
+      if (!mkdir($directory_path)) {
+        throw new Exception("Failed to create directory: $directory_path");
+      }
+    }
+
+    $file_path = $directory_path . '/' . $file['name'];
+    if (!move_uploaded_file($file['tmp_name'], $file_path)) {
+      throw new Exception("Failed to move uploaded file: " . $file['name']);
+    }
+
+    return $file['name'];
+  }
 }

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Services\AuthService;
+use App\Services\UserService;
 
 class AccountController
 {
@@ -39,16 +40,56 @@ class AccountController
       $confirm_password = $_POST["confirm_password"];
       $email = $_POST["email"];
 
-      if ($password !== $confirm_password) {
-        return;
+      if (empty($full_name) || empty($username) || empty($password) || empty($email)) {
+        return redirect_with_error_and_input("/signup", [
+          "message" => "Vui lòng điền đầy đủ thông tin"
+        ], [
+          "full_name" => $full_name,
+          "username" => $username,
+          "email" => $email
+        ]);
       }
 
-      AuthService::signin(
+      if (UserService::findUserByUsername($username) !== null) {
+        return redirect_with_error_and_input("/signup", [
+          "username" => "Tên người dùng đã tồn tại"
+        ], [
+          "full_name" => $full_name,
+          "email" => $email
+        ]);
+      }
+
+      if (UserService::findUserByEmail($email) !== null) {
+        return redirect_with_error_and_input("/signup", [
+          "email" => "Email đã tồn tại"
+        ], [
+          "full_name" => $full_name,
+          "username" => $username
+        ]);
+      }
+
+      if ($password !== $confirm_password) {
+        return redirect_with_error_and_input("/signup", [
+          "confirm_password" => "Mật khẩu không khớp"
+        ], [
+          "full_name" => $full_name,
+          "username" => $username,
+          "email" => $email
+        ]);
+      }
+
+      $isSignedUp = AuthService::signup(
         $full_name,
         $username,
         $password,
         $email
       );
+
+      if (!$isSignedUp) {
+        return redirect_with_error("/signup", [
+          "message" => "Đăng ký thất bại"
+        ]);
+      }
 
       return redirect("/home");
     }

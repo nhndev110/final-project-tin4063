@@ -5,7 +5,7 @@ use App\Services\AuthService;
 <?php ob_start() ?>
 <div class="row">
   <div class="col-8">
-    <h1 class="fs-2 fw-bold mb-4">Tạo bài viết mới</h1>
+    <h1 class="fs-4 fw-bold mb-4">Tạo Bài Viết Mới</h1>
     <form action="/posts/save" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <select name="status" class="form-select btn btn-outline-light fw-medium text-dark border w-25">

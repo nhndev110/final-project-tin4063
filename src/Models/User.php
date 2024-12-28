@@ -12,12 +12,12 @@ class User extends BaseModel
   public static function findByEmail(string $email)
   {
     $sql = "SELECT * FROM users WHERE email = ?";
-    return DB::query($sql, [$email])[0] ?? null;
+    return DB::query($sql, [$email])[0];
   }
 
   public static function findByUsername(string $username)
   {
     $sql = "SELECT * FROM users WHERE username = ?";
-    return DB::query($sql, [$username])[0] ?? null;
+    return DB::query($sql, [$username])[0];
   }
 }

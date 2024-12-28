@@ -19,25 +19,30 @@ use App\Services\LikeService;
  */
 function Post(
   int $user_id,
+  $profile_picture,
   string $full_name,
   string $username,
   int $post_id,
   string $content,
   string $created_at,
-  int $likes,
   array $images,
   array $comments,
   bool $status
 ) { ?>
+  <?php $userLogin = AuthService::user() ?>
   <div class="card shadow-sm mb-4">
     <div class="card-body pb-2">
       <div class="d-flex align-items-center mb-2">
-        <img src="/assets/images/no-avatar.png"
+        <img src="<?= is_null($profile_picture) ? "/assets/images/no-avatar.png" : "/assets/images/users/$user_id/$profile_picture" ?>"
+          alt="<?= $username ?>"
           class="rounded-circle me-3"
-          alt="User"
-          style="height: 40px; width: 40px; object-fit: cover;">
+          style="width: 40px; height: 40px; object-fit: cover;">
         <div>
-          <h6 class="mb-0"><?= htmlspecialchars($full_name); ?></h6>
+          <h6 class="mb-0">
+            <a class="link-dark link-underline-opacity-0 link-underline-opacity-75-hover" href="/users/<?= $username ?>">
+              <?= htmlspecialchars($full_name) ?>
+            </a>
+          </h6>
           <small class="text-muted">
             <span><?= htmlspecialchars($created_at); ?></span>
             <span class="fw-bolder">&#183;</span>
@@ -48,7 +53,7 @@ function Post(
             <?php endif; ?>
           </small>
         </div>
-        <?php if (AuthService::isLoggedIn() && AuthService::user()['username'] === $username): ?>
+        <?php if (AuthService::isLoggedIn() && $userLogin['username'] === $username): ?>
           <div class="dropdown ms-auto">
             <button class="btn btn-outline-light text-dark rounded-circle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-ellipsis"></i>
@@ -109,13 +114,18 @@ function Post(
     <div class="card-footer bg-white p-0">
       <div class="comments px-3" style="max-height: 300px; overflow-y: auto;">
         <?php foreach ($comments as $comment): ?>
+          <?php $comment_user = $comment['user'] ?>
           <div class="d-flex my-3">
-            <img src="/assets/images/no-avatar.png"
+            <img src="<?= is_null($comment_user['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$comment_user['id']}/{$comment_user['profile_picture']}" ?>"
+              alt="<?= $comment_user['username'] ?>"
               class="rounded-circle me-3"
-              alt="User"
-              style="height: 40px; width: 40px; object-fit: cover;" />
+              style="width: 40px; height: 40px; object-fit: cover;">
             <div>
-              <h6 class="mb-0"><?= htmlspecialchars($comment['user']['full_name']) ?></h6>
+              <h6 class="mb-0">
+                <a class="link-dark link-underline-opacity-0 link-underline-opacity-75-hover" href="/users/<?= $comment_user['username'] ?>">
+                  <?= $comment_user['full_name'] ?>
+                </a>
+              </h6>
               <small class="text-muted"><?= htmlspecialchars($comment['created_at']) ?></small>
               <p class="mb-0"><?= htmlspecialchars($comment['content']) ?></p>
             </div>
@@ -123,12 +133,12 @@ function Post(
         <?php endforeach; ?>
       </div>
       <div class="d-flex px-3 py-2 border-top">
-        <img src="/assets/images/no-avatar.png"
+        <img src="<?= is_null($userLogin['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLogin['id']}/{$userLogin['profile_picture']}" ?>"
+          alt="<?= $userLogin['username'] ?>"
           class="rounded-circle me-3"
-          alt="User"
-          style="height: 40px; width: 40px; object-fit: cover;" />
+          style="width: 40px; height: 40px; object-fit: cover;">
         <form action="/posts/<?= $post_id ?>/comment/create" method="post" class="d-flex flex-grow-1">
-          <input type="hidden" name="user_id" value="<?= $user_id ?>">
+          <input type="hidden" name="user_id" value="<?= $userLogin['id'] ?>">
           <input type="text" name="content"
             class="form-control rounded-pill flex-grow-1 no-focus-ring"
             placeholder="Viết bình luận..." autocomplete="off" />
