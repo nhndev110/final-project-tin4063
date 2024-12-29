@@ -30,3 +30,5 @@ $router->addRoute('/users/unfollow/(\d+)', [new UserController(), 'unfollow']);
 $router->addRoute('/login', [new AccountController(), 'login']);
 $router->addRoute('/signup', [new AccountController(), 'signup']);
 $router->addRoute('/logout', [new AccountController(), 'logout']);
+
+$router->addRoute('/post/(\d+)/comment/create', [new CommentController(), 'create']);
