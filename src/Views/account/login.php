@@ -45,7 +45,7 @@
           <?php endif ?>
           <form action="/login" method="post">
             <div class="mb-3">
-              <input type="text" name="email" class="form-control" placeholder="Email" />
+              <input type="text" name="email" class="form-control" placeholder="Email" value="<?= old("email") ?>" />
             </div>
             <div class="mb-3">
               <input type="password" name="password" class="form-control" placeholder="Mật khẩu" />

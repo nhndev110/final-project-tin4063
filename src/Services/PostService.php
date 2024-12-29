@@ -58,12 +58,14 @@ class PostService
     return Post::delete(intval($id));
   }
 
-  public static function likePost($id)
+  public static function likePost(int $id)
   {
     if (LikeService::isPostLiked($id)) {
-      return LikeService::deleteLike($id);
+      LikeService::deleteLike($id);
+      return false;
     } else {
-      return LikeService::createLike(intval($id));
+      LikeService::createLike($id);
+      return true;
     }
   }
 }

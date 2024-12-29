@@ -14,16 +14,20 @@ class AccountController
       $password = $_POST["password"];
 
       if (empty($email) || empty($password)) {
-        return redirect_with_error("/login", [
+        return redirect_with_error_and_input("/login", [
           "message" => "Email hoặc mật khẩu không được để trống"
+        ], [
+          "email" => $email
         ]);
       }
 
       if (AuthService::login($email, $password)) {
         return redirect("/home");
       } else {
-        return redirect_with_error("/login", [
+        return redirect_with_error_and_input("/login", [
           "message" => "Email hoặc mật khẩu không chính xác"
+        ], [
+          "email" => $email
         ]);
       }
     }

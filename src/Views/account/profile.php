@@ -52,26 +52,22 @@ use App\Services\AuthService;
 
 <hr class="my-4">
 
-<div class="row">
-  <div class="col-8">
-    <?php foreach ($posts as $post) : ?>
-      <?php
-      Post(
-        $user['id'],
-        $user['profile_picture'],
-        $user['full_name'],
-        $user['username'],
-        $post['id'],
-        $post['content'],
-        $post['created_at'],
-        $post['images'],
-        $post['comments'],
-        $post['status']
-      )
-      ?>
-    <?php endforeach ?>
-  </div>
-</div>
+<?php foreach ($posts as $post) : ?>
+  <?php
+  Post(
+    $user['id'],
+    $user['profile_picture'],
+    $user['full_name'],
+    $user['username'],
+    $post['id'],
+    $post['content'],
+    $post['created_at'],
+    $post['images'],
+    $post['comments'],
+    $post['status']
+  )
+  ?>
+<?php endforeach ?>
 
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -135,4 +131,86 @@ use App\Services\AuthService;
   </div>
 </div>
 <?php $content = ob_get_clean() ?>
+
+<?php ob_start() ?>
+<script>
+  $(".btn-like").click(function(ev) {
+    ev.preventDefault();
+
+    $.ajax({
+        url: $(this).prop("href"),
+        type: "GET",
+        dataType: "json",
+      })
+      .done((data) => {
+        if (data.status) {
+          $(this).html(`
+            <div class="text-primary">
+              <i class="fa-solid fa-thumbs-up"></i>
+              <span class="fw-medium ms-1">
+                Thích (${data.likes})
+              </span>
+            </div>
+          `);
+        } else {
+          $(this).html(`
+            <div class="text-dark">
+              <i class="fa-regular fa-thumbs-up"></i>
+              <span class="fw-medium ms-1">
+                Thích (${data.likes})
+              </span>
+            </div>
+          `);
+        }
+      });
+  });
+
+  function showComments(postId) {
+    $.ajax({
+        url: `/posts/${postId}/comments`,
+        type: "GET",
+        dataType: "html",
+      })
+      .done((data) => {
+        $(`#comments-${postId}`).html(data);
+      });
+  }
+
+  $(".form-comment").submit(function(ev) {
+    ev.preventDefault();
+
+    $.ajax({
+        url: $(this).prop("action"),
+        type: $(this).prop("method"),
+        data: $(this).serializeArray(),
+        dataType: "json",
+      })
+      .done((data) => {
+        $(this).trigger("reset");
+        showComments(data.post_id);
+        $(`#qty-comments-${data.post_id}`).text(data.qty_comments);
+      });
+  });
+
+  $(".delete-post").click(function(ev) {
+    ev.preventDefault();
+
+    const postEl = $(this).closest(".card");
+
+    if (confirm("Bạn có chắc chắn muốn xóa bài viết này?")) {
+      $.ajax({
+          url: $(this).prop("href"),
+          type: "GET",
+          dataType: "json",
+        })
+        .done((data) => {
+          if (data.status) {
+            postEl.remove();
+          }
+        });
+    }
+  });
+</script>
+<?php $scripts = ob_get_clean() ?>
+
 <?php include(APP_ROOT . '/templates/layout.php') ?>

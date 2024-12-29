@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Services\AuthService;
+use App\Services\LikeService;
 use App\Services\PostService;
 use App\Services\UploadService;
 
@@ -33,7 +34,7 @@ class PostController extends Controller
 
       if (strlen($status) === 0) {
         return redirect_with_error("/posts/create", [
-          'status' => 'Vui lòng chọn trạng thái'
+          'status' => 'Vui lòng chọn trạng thái',
         ]);
       }
 
@@ -47,7 +48,7 @@ class PostController extends Controller
         PostService::savePostPhotos($post_id, $files_name);
       }
 
-      return redirect("/profile");
+      return redirect("/users/" . AuthService::user()['username']);
     }
 
     return redirect("/posts/create");
@@ -58,14 +59,19 @@ class PostController extends Controller
     AuthService::checkAuthentication();
 
     PostService::deletePost($post_id);
-    return redirect_back();
+
+    echo json_encode(['status' => 'success']);
+    return;
   }
 
   public function like(int $post_id)
   {
     AuthService::checkAuthentication();
 
-    PostService::likePost($post_id);
-    return redirect_back();
+    echo json_encode([
+      'status' => PostService::likePost($post_id),
+      'likes' => LikeService::countLikes($post_id),
+    ]);
+    return;
   }
 }

@@ -17,8 +17,8 @@ $router->addRoute('/posts/create', [new PostController(), 'create']);
 $router->addRoute('/posts/(\d+)/update', [new PostController(), 'update']);
 $router->addRoute('/posts/save', [new PostController(), 'save']);
 $router->addRoute('/posts/(\d+)/delete', [new PostController(), 'delete']);
-$router->addRoute('/posts/(\d+)/comment/create', [new CommentController(), 'create']);
-$router->addRoute('/posts/(\d+)/comment', [new CommentController(), 'index']);
+$router->addRoute('/posts/(\d+)/comments/create', [new CommentController(), 'create']);
+$router->addRoute('/posts/(\d+)/comments', [new CommentController(), 'index']);
 $router->addRoute('/posts/(\d+)/like', [new PostController(), 'like']);
 
 $router->addRoute('/search', [new SearchController(), 'index']);

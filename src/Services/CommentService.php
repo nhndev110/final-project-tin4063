@@ -18,6 +18,11 @@ class CommentService
     return $comments;
   }
 
+  public static function countCommentsByPostID(int $post_id)
+  {
+    return Comment::countByPostID($post_id)[0]['COUNT(*)'] ?? 0;
+  }
+
   public static function createComment(int $user_id, int $post_id, string $content): int
   {
     return Comment::create([
