@@ -39,13 +39,13 @@
           <h1 class="text-center mb-3 fw-bold fs-2" style="font-family: cursive;">H.N.L</h1>
           <p class="text-center mb-3">Nơi Kết Nối Những Trái Tim Cô Đơn</p>
           <?php if (exists_error('message')) : ?>
-            <div class="alert alert-danger p-2" role="alert">
+            <div class="alert alert-danger py-2 px-3" role="alert">
               <span style="font-size: 0.925rem;"><?= error('message') ?></span>
             </div>
           <?php endif ?>
           <form action="/login" method="post">
             <div class="mb-3">
-              <input type="text" name="email" class="form-control" placeholder="Email" />
+              <input type="text" name="email" class="form-control" placeholder="Email" value="<?= old("email") ?>" />
             </div>
             <div class="mb-3">
               <input type="password" name="password" class="form-control" placeholder="Mật khẩu" />

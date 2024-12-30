@@ -4,16 +4,46 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Services\AuthService;
+use App\Services\LikeService;
 use App\Services\PostService;
 use App\Services\UploadService;
+use App\Services\UserService;
 
 class PostController extends Controller
 {
+  public function detail(int $post_id)
+  {
+    AuthService::checkAuthentication();
+
+    $post = PostService::getPostById($post_id);
+    $user = UserService::getUserById($post['user_id']);
+
+    if ($user['username'] !== AuthService::user()['username'] && !$post['status']) {
+      return redirect("/home");
+    }
+
+    return view('Post\detail', [
+      'user' => $user,
+      'post' => $post,
+      'images' => PostService::getImageByPostID($post_id),
+    ]);
+  }
+
   public function create()
   {
     AuthService::checkAuthentication();
 
     return view('Post\create');
+  }
+
+  public function edit(int $post_id)
+  {
+    AuthService::checkAuthentication();
+
+    return view('Post\edit', [
+      'post' => PostService::getPostById($post_id),
+      'images' => PostService::getImageByPostID($post_id),
+    ]);
   }
 
   public function save()
@@ -33,21 +63,26 @@ class PostController extends Controller
 
       if (strlen($status) === 0) {
         return redirect_with_error("/posts/create", [
-          'status' => 'Vui lòng chọn trạng thái'
+          'status' => 'Vui lòng chọn trạng thái',
         ]);
       }
 
-      $post_id = PostService::savePost($post_id, $content, $status);
+      $saved_post_id = PostService::savePost($post_id, $content, $status);
 
       if (!empty($_FILES['fileInput']) && $_FILES['fileInput']['error'][0] != 4) {
         $files = $_FILES['fileInput'];
 
-        $files_name = UploadService::uploadMultipleFile($files, "/assets/images/posts/$post_id");
+        $files_name = UploadService::uploadMultipleFile($files, "/assets/images/posts/$saved_post_id");
 
-        PostService::savePostPhotos($post_id, $files_name);
+        PostService::savePostPhotos($saved_post_id, $files_name);
       }
 
-      return redirect("/profile");
+      if ($post_id == $saved_post_id) {
+        echo json_encode(['post_id' => $saved_post_id]);
+        return;
+      } else {
+        return redirect("/users/" . AuthService::user()['username']);
+      }
     }
 
     return redirect("/posts/create");
@@ -58,14 +93,19 @@ class PostController extends Controller
     AuthService::checkAuthentication();
 
     PostService::deletePost($post_id);
-    return redirect_back();
+
+    echo json_encode(['status' => 'success']);
+    return;
   }
 
   public function like(int $post_id)
   {
     AuthService::checkAuthentication();
 
-    PostService::likePost($post_id);
-    return redirect_back();
+    echo json_encode([
+      'status' => PostService::likePost($post_id),
+      'likes' => LikeService::countLikes($post_id),
+    ]);
+    return;
   }
 }
