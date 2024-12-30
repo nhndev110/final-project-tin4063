@@ -93,8 +93,13 @@ use App\Services\AuthService;
                 <i class="fa-regular fa-square-plus"></i>
                 <span class="ms-1">Tạo mới</span>
               </a>
-              <a href="/users/<?= AuthService::user()['username'] ?>"
-                class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/users') ? 'active' : '' ?> mt-2 border">
+              <!-- <a href="/users/<?= AuthService::user()['username'] ?>" -->
+              <!-- class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/users') ? 'active' : '' ?> mt-2 border">
+              <i class="fa-regular fa-user"></i>
+              <span class="ms-1">Hồ sơ</span>
+              </a> -->
+              <a href="/users/<?= htmlspecialchars(AuthService::user()['username']); ?>"
+                class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/users/' . AuthService::user()['username']) ? 'active' : '' ?> mt-2 border">
                 <i class="fa-regular fa-user"></i>
                 <span class="ms-1">Hồ sơ</span>
               </a>

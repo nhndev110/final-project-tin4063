@@ -38,17 +38,18 @@ use App\Services\FollowService;
         aria-labelledby="pills-user-tab"
         tabindex="0">
         <?php foreach ($users as $user): ?>
-          <?php
-          $followerCount = FollowService::countFollows($user['id']);
-          FollowUserItemWithFollowers(
-            $user['full_name'],
-            $user['username'],
-            $followerCount,
-            $user['id']
-          );
-          ?>
+          <a href="/users/<?= htmlspecialchars($user['username']); ?>" class="text-decoration-none">
+            <?php
+            $followerCount = FollowService::countFollows($user['id']);
+            FollowUserItemWithFollowers(
+              $user['full_name'],
+              $user['username'],
+              $followerCount,
+              $user['id']
+            );
+            ?>
+          </a>
         <?php endforeach; ?>
-
       </div>
     </div>
   </div>

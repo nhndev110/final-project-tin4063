@@ -19,15 +19,14 @@ class UserController
     ]);
   }
 
-  public function follow($followed_id)
+  public function follow($follow_id)
   {
-    $follower_id = AuthService::user()['user_id'];
-    FollowService::followUser($follower_id, $followed_id);
-  }
+    AuthService::checkAuthentication();
 
-  public function unfollow($followed_id)
-  {
-    $follower_id = AuthService::user()['user_id'];
-    FollowService::unfollowUser($follower_id, $followed_id);
+    if (FollowService::isFollow($follow_id)) {
+      return FollowService::deleteFollow($follow_id);
+    } else {
+      return FollowService::createFollow(intval($follow_id));
+    }
   }
 }

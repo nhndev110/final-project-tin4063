@@ -24,8 +24,8 @@ $router->addRoute('/posts/(\d+)/like', [new PostController(), 'like']);
 $router->addRoute('/search', [new SearchController(), 'index']);
 
 $router->addRoute('/users/(.*)', [new UserController(), 'profile']);
-$router->addRoute('/users/follow/(\d+)', [new UserController(), 'follow']);
-$router->addRoute('/users/unfollow/(\d+)', [new UserController(), 'unfollow']);
+
+$router->addRoute('/users/(\d+)/follow', [new UserController(), 'follow']);
 
 $router->addRoute('/login', [new AccountController(), 'login']);
 $router->addRoute('/signup', [new AccountController(), 'signup']);
