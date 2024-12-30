@@ -3,6 +3,7 @@
 use App\Services\AuthService;
 ?>
 <?php ob_start() ?>
+<h1 class="fs-4 fw-bold mb-4">Tìm kiếm</h1>
 <form action="" method="get" class="w-100">
   <div class="input-group">
     <button class="btn border border-end-0 rounded-start-pill" type="submit">

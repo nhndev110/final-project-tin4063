@@ -1,7 +1,3 @@
-<?php
-
-use App\Services\AuthService;
-?>
 <?php ob_start() ?>
 <h1 class="fs-4 fw-bold mb-4">Tạo Bài Viết Mới</h1>
 <form action="/posts/save" method="post" enctype="multipart/form-data">

@@ -20,10 +20,4 @@ class User extends BaseModel
     $sql = "SELECT * FROM users WHERE username = ?";
     return DB::query($sql, [$username])[0];
   }
-
-  public static function findByUsername(string $username)
-  {
-    $sql = "SELECT * FROM users WHERE username = ?";
-    return DB::query($sql, [$username])[0] ?? null;
-  }
 }

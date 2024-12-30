@@ -21,11 +21,6 @@ class UserService
     return User::findByUsername($username) ?? null;
   }
 
-  public static function findUserByUsername(string $username)
-  {
-    return User::findByUsername($username);
-  }
-
   public static function getUserById($id)
   {
     return User::find(intval($id));

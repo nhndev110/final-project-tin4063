@@ -1,7 +1,7 @@
 <?php foreach ($comments as $comment): ?>
   <?php $comment_user = $comment['user'] ?>
   <div class="d-flex my-3">
-    <img src="<?= is_null($comment_user['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$comment_user['id']}/{$comment_user['profile_picture']}" ?>"
+    <img src="<?= is_null_or_white_space($comment_user['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$comment_user['id']}/{$comment_user['profile_picture']}" ?>"
       alt="<?= $comment_user['username'] ?>"
       class="rounded-circle me-3"
       style="width: 40px; height: 40px; object-fit: cover;">

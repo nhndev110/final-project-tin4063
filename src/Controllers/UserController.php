@@ -14,9 +14,25 @@ class UserController
   {
     AuthService::checkAuthentication();
 
+    $user = UserService::findUserByUsername($username);
+    if (is_null($user)) {
+      return redirect("/home");
+    }
+
     return view("Account/profile", [
-      'user' => UserService::findUserByUsername($username),
+      'user' => $user,
       'posts' => PostService::getAllPostsByUsername($username),
+      'follower_count' => FollowService::getFollowerCount($user['id']),
+      'followed_count' => FollowService::getFollowedCount($user['id']),
+    ]);
+  }
+
+  public function edit(string $username)
+  {
+    AuthService::checkAuthentication();
+
+    return view("Account/edit", [
+      'user' => UserService::findUserByUsername($username),
     ]);
   }
 
@@ -26,20 +42,13 @@ class UserController
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $full_name = $_POST["full_name"];
-      $username = $_POST["username"];
       $email = $_POST["email"];
       $profile_picture = $_FILES["profile_picture"];
       $bio = $_POST["bio"];
 
-      if (empty($full_name) || empty($username) || empty($email)) {
+      if (empty($full_name) || empty($email)) {
         return redirect_with_error("/users/update", [
           "message" => "Vui lòng điền đầy đủ thông tin"
-        ]);
-      }
-
-      if (UserService::findUserByUsername($username) !== null && $username !== AuthService::user()['username']) {
-        return redirect_with_error("/users/" . AuthService::user()['username'], [
-          "username" => "Tên người dùng đã tồn tại"
         ]);
       }
 
@@ -52,20 +61,20 @@ class UserController
       $user = AuthService::user();
       $user_id = $user['id'];
 
-      $name_profile_picture = null;
-      if ($profile_picture['error'] === 0) {
+      $name_profile_picture = $_POST["old_profile_picture"] ?? NULL;
+      if (!is_null($profile_picture) && $profile_picture['error'] === 0) {
         $name_profile_picture = UploadService::uploadFile($profile_picture, "/assets/images/users/$user_id");
+        $_SESSION['user']['profile_picture'] = $name_profile_picture;
       }
 
       UserService::updateUser($user_id, [
         "full_name" => $full_name,
-        "username" => $username,
         "email" => $email,
         "profile_picture" => $name_profile_picture,
         "bio" => $bio,
       ]);
 
-      return redirect("/users/$username");
+      return redirect("/users/{$user['username']}");
     } else {
       return redirect("/home");
     }

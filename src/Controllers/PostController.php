@@ -7,14 +7,43 @@ use App\Services\AuthService;
 use App\Services\LikeService;
 use App\Services\PostService;
 use App\Services\UploadService;
+use App\Services\UserService;
 
 class PostController extends Controller
 {
+  public function detail(int $post_id)
+  {
+    AuthService::checkAuthentication();
+
+    $post = PostService::getPostById($post_id);
+    $user = UserService::getUserById($post['user_id']);
+
+    if ($user['username'] !== AuthService::user()['username'] && !$post['status']) {
+      return redirect("/home");
+    }
+
+    return view('Post\detail', [
+      'user' => $user,
+      'post' => $post,
+      'images' => PostService::getImageByPostID($post_id),
+    ]);
+  }
+
   public function create()
   {
     AuthService::checkAuthentication();
 
     return view('Post\create');
+  }
+
+  public function edit(int $post_id)
+  {
+    AuthService::checkAuthentication();
+
+    return view('Post\edit', [
+      'post' => PostService::getPostById($post_id),
+      'images' => PostService::getImageByPostID($post_id),
+    ]);
   }
 
   public function save()
@@ -38,17 +67,22 @@ class PostController extends Controller
         ]);
       }
 
-      $post_id = PostService::savePost($post_id, $content, $status);
+      $saved_post_id = PostService::savePost($post_id, $content, $status);
 
       if (!empty($_FILES['fileInput']) && $_FILES['fileInput']['error'][0] != 4) {
         $files = $_FILES['fileInput'];
 
-        $files_name = UploadService::uploadMultipleFile($files, "/assets/images/posts/$post_id");
+        $files_name = UploadService::uploadMultipleFile($files, "/assets/images/posts/$saved_post_id");
 
-        PostService::savePostPhotos($post_id, $files_name);
+        PostService::savePostPhotos($saved_post_id, $files_name);
       }
 
-      return redirect("/users/" . AuthService::user()['username']);
+      if ($post_id == $saved_post_id) {
+        echo json_encode(['post_id' => $saved_post_id]);
+        return;
+      } else {
+        return redirect("/users/" . AuthService::user()['username']);
+      }
     }
 
     return redirect("/posts/create");

@@ -18,6 +18,10 @@ class CommentController
       $user_id = $_POST['user_id'];
       $content = $_POST['content'];
 
+      if (empty(trim($content))) {
+        return;
+      }
+
       CommentService::createComment($user_id, $post_id, $content);
 
       echo json_encode([

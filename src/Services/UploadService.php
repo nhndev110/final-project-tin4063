@@ -26,12 +26,14 @@ class UploadService
         'size' => $files['size'][$i]
       ];
 
-      $file_path = $directory_path . '/' . $file['name'];
+      $file_info = pathinfo($file['name']);
+      $file_name = $file_info['filename'] . '-' . time() . '.' . $file_info['extension'];
+      $file_path = $directory_path . '/' . $file_name;
       if (!move_uploaded_file($file['tmp_name'], $file_path)) {
         throw new Exception("Failed to move uploaded file: " . $file['name']);
       }
 
-      $files_name[] = $file['name'];
+      $files_name[] = $file_name;
     }
 
     return $files_name;
@@ -46,11 +48,13 @@ class UploadService
       }
     }
 
-    $file_path = $directory_path . '/' . $file['name'];
+    $file_info = pathinfo($file['name']);
+    $file_name = $file_info['filename'] . '-' . time() . '.' . $file_info['extension'];
+    $file_path = $directory_path . '/' . $file_name;
     if (!move_uploaded_file($file['tmp_name'], $file_path)) {
       throw new Exception("Failed to move uploaded file: " . $file['name']);
     }
 
-    return $file['name'];
+    return $file_name;
   }
 }

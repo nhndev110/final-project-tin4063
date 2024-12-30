@@ -18,67 +18,69 @@ function Post(
   <?php $userLoggedIn = AuthService::user() ?>
   <div class="card shadow-sm mb-4">
     <div class="card-body pb-2">
-      <div class="d-flex align-items-center mb-2">
-        <img src="<?= is_null($profile_picture) ? "/assets/images/no-avatar.png" : "/assets/images/users/$user_id/$profile_picture" ?>"
-          alt="<?= $username ?>"
-          class="rounded-circle me-3"
-          style="width: 40px; height: 40px; object-fit: cover;">
-        <div>
-          <h6 class="mb-0">
-            <a class="link-dark link-underline-opacity-0 link-underline-opacity-75-hover" href="/users/<?= $username ?>">
-              <?= htmlspecialchars($full_name) ?>
-            </a>
-          </h6>
-          <small class="text-muted">
-            <span><?= date_format(date_create($created_at), "d-m-Y H:i") ?></span>
-            <span class="fw-bolder">&#183;</span>
-            <?php if ($status): ?>
-              <i class="fa-solid fa-earth-americas"></i>
-            <?php else: ?>
-              <i class="fa-solid fa-lock"></i>
-            <?php endif; ?>
-          </small>
+      <div id="post-detail-<?= $post_id ?>" class="mb-2">
+        <div class="d-flex align-items-center mb-2">
+          <img src="<?= is_null_or_white_space($profile_picture) ? "/assets/images/no-avatar.png" : "/assets/images/users/$user_id/$profile_picture" ?>"
+            alt="<?= $username ?>"
+            class="rounded-circle me-3"
+            style="width: 40px; height: 40px; object-fit: cover;">
+          <div>
+            <h6 class="mb-0">
+              <a class="link-dark link-underline-opacity-0 link-underline-opacity-75-hover" href="/users/<?= $username ?>">
+                <?= htmlspecialchars($full_name) ?>
+              </a>
+            </h6>
+            <small class="text-muted">
+              <span><?= date_format(date_create($created_at), "d-m-Y H:i") ?></span>
+              <span class="fw-bolder">&#183;</span>
+              <?php if ($status): ?>
+                <i class="fa-solid fa-earth-americas"></i>
+              <?php else: ?>
+                <i class="fa-solid fa-lock"></i>
+              <?php endif; ?>
+            </small>
+          </div>
+          <?php if (AuthService::isLoggedIn() && $userLoggedIn['username'] === $username): ?>
+            <div class="dropdown ms-auto">
+              <button class="btn btn-outline-light text-dark rounded-circle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-ellipsis"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="edit-post dropdown-item fw-medium" href="/posts/<?= $post_id ?>/edit">
+                    <i class="fa-solid fa-pen"></i>
+                    <span class="ms-1">Chỉnh sửa</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="delete-post dropdown-item fw-medium" href="/posts/<?= $post_id ?>/delete">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span class="ms-1">Xoá bài viết</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          <?php endif; ?>
         </div>
-        <?php if (AuthService::isLoggedIn() && $userLoggedIn['username'] === $username): ?>
-          <div class="dropdown ms-auto">
-            <button class="btn btn-outline-light text-dark rounded-circle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-ellipsis"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <a class="dropdown-item fw-medium" href="#">
-                  <i class="fa-solid fa-pen"></i>
-                  <span class="ms-1">Chỉnh sửa</span>
-                </a>
-              </li>
-              <li>
-                <a class="delete-post dropdown-item fw-medium" href="/posts/<?= $post_id ?>/delete">
-                  <i class="fa-solid fa-trash-can"></i>
-                  <span class="ms-1">Xoá bài viết</span>
-                </a>
-              </li>
-            </ul>
+        <p class="card-text mb-2">
+          <?= htmlspecialchars($content) ?>
+        </p>
+        <?php if (!empty($images)): ?>
+          <div class="swiper-container overflow-hidden">
+            <div class="swiper-wrapper">
+              <?php foreach ($images as $image): ?>
+                <?php if (is_array($image) && isset($image['photo'])): ?>
+                  <div class="user-select-none swiper-slide">
+                    <img src="/assets/images/posts/<?= $post_id ?>/<?= $image['photo'] ?>"
+                      alt="Image" class="rounded"
+                      style="width: 150px; height: 150px; object-fit: cover;" />
+                  </div>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            </div>
           </div>
         <?php endif; ?>
       </div>
-      <p class="card-text">
-        <?= htmlspecialchars($content) ?>
-      </p>
-      <?php if (!empty($images)): ?>
-        <div class="swiper-container overflow-hidden mb-2">
-          <div class="swiper-wrapper">
-            <?php foreach ($images as $image): ?>
-              <?php if (is_array($image) && isset($image['photo'])): ?>
-                <div class="user-select-none swiper-slide">
-                  <img src="/assets/images/posts/<?= $post_id ?>/<?= $image['photo'] ?>"
-                    alt="Image" class="rounded"
-                    style="width: 150px; height: 150px; object-fit: cover;" />
-                </div>
-              <?php endif; ?>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      <?php endif; ?>
       <div class="d-flex justify-content-between align-items-center">
         <?php if (LikeService::isPostLiked($post_id)) : ?>
           <a href="/posts/<?= $post_id ?>/like" class="btn-like text-decoration-none py-1 px-3 rounded">
@@ -110,7 +112,7 @@ function Post(
         <?php foreach ($comments as $comment): ?>
           <?php $comment_user = $comment['user'] ?>
           <div class="d-flex my-3">
-            <img src="<?= is_null($comment_user['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$comment_user['id']}/{$comment_user['profile_picture']}" ?>"
+            <img src="<?= is_null_or_white_space($comment_user['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$comment_user['id']}/{$comment_user['profile_picture']}" ?>"
               alt="<?= $comment_user['username'] ?>"
               class="rounded-circle me-3"
               style="width: 40px; height: 40px; object-fit: cover;">
@@ -129,7 +131,7 @@ function Post(
         <?php endforeach; ?>
       </div>
       <div class="d-flex px-3 py-2 border-top">
-        <img src="<?= is_null($userLoggedIn['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
+        <img src="<?= is_null_or_white_space($userLoggedIn['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
           alt="<?= $userLoggedIn['username'] ?>"
           class="rounded-circle me-3"
           style="width: 40px; height: 40px; object-fit: cover;">

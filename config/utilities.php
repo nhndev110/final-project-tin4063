@@ -68,3 +68,12 @@ function dd($data)
   echo '</pre>';
   die();
 }
+
+function is_null_or_white_space($str)
+{
+  if (is_null($str) || trim($str) === '') {
+    return true;
+  }
+
+  return false;
+}

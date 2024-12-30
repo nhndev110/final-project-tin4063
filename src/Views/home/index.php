@@ -4,32 +4,97 @@ use App\Services\AuthService;
 ?>
 <?php ob_start() ?>
 <h1 class="fs-4 fw-bold mb-4">Bản Tin Mới Nhất</h1>
-<?php for ($i = 1; $i <= 5; $i++): ?>
-  <?php Post(
-    1,
-    null,
-    "Nguyễn Hoàng Nhân",
-    "nhndev110",
-    2,
-    "Bắt đầu từ ngày mai, 25/12/2024, chỉ những tài khoản đã xác thực mới được phép đăng tải, bình luận và chia sẻ thông tin trên mạng xã hội. Đây là quy định mới trong Nghị định số 147. Trong vòng 90 ngày kể từ ngày 25/12, tất cả tổ chức, doanh nghiệp và cá nhân, cả trong nước và quốc tế, cung cấp thông tin xuyên biên giới vào Việt Nam đều phải xác thực các tài khoản đang hoạt động của người sử dụng dịch vụ mạng xã hội theo quy định.",
-    "21h10",
-    [
-      "https://via.placeholder.com/600x400",
-      "https://via.placeholder.com/400x600",
-      "https://via.placeholder.com/800x600",
-      "https://via.placeholder.com/800x600",
-      "https://via.placeholder.com/800x600",
-      "https://via.placeholder.com/800x600",
-    ],
-    [
-      ["full_name" => "Nguyễn Văn An", "created_at" => "22h00", "content" => "Điều này làm cho việc sử dụng mạng xã hội trở nên khó khăn hơn."],
-      ["full_name" => "Trần Thị Bích", "created_at" => "22h05", "content" => "Tôi nghĩ đây là quy định cần thiết."],
-      ["full_name" => "Lê Hoàng Phong", "created_at" => "22h10", "content" => "Tôi đồng tình với quy định này."],
-      ["full_name" => "Phạm Thị Hồng", "created_at" => "22h15", "content" => "Tôi không đồng ý với quy định này."],
-      ["full_name" => "Hoàng Minh Tuấn", "created_at" => "22h20", "content" => "Tôi chưa biết quy định này."],
-    ],
-    true
-  ) ?>
-<?php endfor ?>
+<?php if (empty($posts)): ?>
+  <p class="fs-3 text-secondary fw-bold text-center">Chưa có bài viết mới nào</p>
+<?php else: ?>
+  <?php foreach ($posts as $post) : ?>
+    <?php
+    Post(
+      $post['user']['id'],
+      $post['user']['profile_picture'],
+      $post['user']['full_name'],
+      $post['user']['username'],
+      $post['id'],
+      $post['content'],
+      $post['created_at'],
+      $post['images'],
+      $post['comments'],
+      $post['status']
+    )
+    ?>
+  <?php endforeach ?>
+<?php endif ?>
 <?php $content = ob_get_clean() ?>
+
+<?php ob_start() ?>
+<script>
+  $(".btn-like").click(function(ev) {
+    ev.preventDefault();
+
+    $.ajax({
+        url: $(this).prop("href"),
+        type: "GET",
+        dataType: "json",
+      })
+      .done((data) => {
+        if (data.status) {
+          $(this).html(`
+            <div class="text-primary">
+              <i class="fa-solid fa-thumbs-up"></i>
+              <span class="fw-medium ms-1">
+                Thích (${data.likes})
+              </span>
+            </div>
+          `);
+        } else {
+          $(this).html(`
+            <div class="text-dark">
+              <i class="fa-regular fa-thumbs-up"></i>
+              <span class="fw-medium ms-1">
+                Thích (${data.likes})
+              </span>
+            </div>
+          `);
+        }
+      });
+  });
+
+  function showComments(postId) {
+    $.ajax({
+        url: `/posts/${postId}/comments`,
+        type: "GET",
+        dataType: "html",
+      })
+      .done((data) => {
+        $(`#comments-${postId}`).html(data);
+      });
+  }
+
+  $(".form-comment").submit(function(ev) {
+    ev.preventDefault();
+
+    const data = $(this).serializeArray();
+
+    const contentObj = data.find(obj => obj.name === "content");
+    const content = contentObj.value.trim() ?? "";
+
+    if (content === "") {
+      alert("Vui lòng nhập nội dùng bình luận");
+      return;
+    }
+
+    $.ajax({
+        url: $(this).prop("action"),
+        type: $(this).prop("method"),
+        data: data,
+        dataType: "json",
+      })
+      .done((data) => {
+        $(this).trigger("reset");
+        showComments(data.post_id);
+        $(`#qty-comments-${data.post_id}`).text(data.qty_comments);
+      });
+  });
+</script>
+<?php $scripts = ob_get_clean() ?>
 <?php include(APP_ROOT . '/templates/layout.php') ?>
