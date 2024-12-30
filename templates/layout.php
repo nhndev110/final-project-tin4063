@@ -114,7 +114,7 @@ $userLoggedIn = AuthService::user();
         <div class="col-3">
           <div class="user-card d-flex align-items-center justify-content-between mt-4 pe-3 bg-light rounded shadow-sm">
             <a href="/users/<?= $userLoggedIn['username'] ?>" class="d-flex py-3 ps-3 align-items-center text-decoration-none text-dark">
-              <img src="<?= is_null_or_white_space($userLoggedIn['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
+              <img src="<?= is_null_or_white_space($userLoggedIn['profile_picture'] ?? "") ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
                 class="rounded-circle me-3"
                 alt="User"
                 style="width: 50px; height: 50px; object-fit: cover;" />

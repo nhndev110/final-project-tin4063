@@ -6,7 +6,7 @@ use App\Services\LikeService;
 
 function Post(
   int $user_id,
-  $profile_picture,
+  string|null $profile_picture,
   string $full_name,
   string $username,
   int $post_id,
@@ -132,7 +132,7 @@ function Post(
         <?php endforeach; ?>
       </div>
       <div class="d-flex px-3 py-2 border-top">
-        <img src="<?= is_null_or_white_space($userLoggedIn['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
+        <img src="<?= is_null_or_white_space($userLoggedIn['profile_picture'] ?? "") ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
           alt="<?= $userLoggedIn['username'] ?>"
           class="rounded-circle me-3"
           style="width: 40px; height: 40px; object-fit: cover;">
@@ -151,18 +151,19 @@ function Post(
 <?php } ?>
 
 <?php function FollowUserItemWithFollowers(
+  int $followed_id,
   string $full_name,
   string $username,
+  string|null $profile_picture,
   int $followers,
-  int $followed_id
 ) {
   $is_following = FollowService::isFollowing($followed_id);
 ?>
   <div class="d-flex align-items-center mb-4">
-    <img src="/assets/images/no-avatar.png"
+    <img src="<?= is_null_or_white_space($profile_picture) ? "/assets/images/no-avatar.png" : "/assets/images/users/$followed_id/$profile_picture" ?>"
+      alt="<?= $username ?>"
       class="rounded-circle me-3"
-      alt="User"
-      style="width: 40px; height: 40px; object-fit: cover;" />
+      style="width: 40px; height: 40px; object-fit: cover;">
     <div class="flex-grow-1">
       <h6 class="mb-0">
         <a href="/users/<?= htmlspecialchars($username) ?>" class="link-dark link-underline-opacity-0 link-underline-opacity-75-hover">

@@ -40,10 +40,11 @@ use App\Services\FollowService;
       <?php
       $followerCount = FollowService::getFollowerCount($user['id']);
       FollowUserItemWithFollowers(
+        $user['id'],
         $user['full_name'],
         $user['username'],
+        $user['profile_picture'],
         $followerCount,
-        $user['id']
       );
       ?>
     <?php endforeach; ?>

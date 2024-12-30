@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\AuthService;
+use App\Services\FollowService;
 
 $userLoggedIn = AuthService::user();
 ?>
@@ -36,10 +37,17 @@ $userLoggedIn = AuthService::user();
         <p><?= $user['bio'] ?? '' ?></p>
         <div class="d-flex">
           <?php if ($user['username'] !== $userLoggedIn['username']) : ?>
-            <button class="btn btn-primary rounded-pill">
-              <i class="fa-solid fa-user-plus"></i>
-              <span class="ms-1">Theo dõi</span>
-            </button>
+            <?php if (FollowService::isFollowing($user['id'])) : ?>
+              <a href="/users/<?= $user['id'] ?>/follow" class="btn btn-outline-primary rounded-pill">
+                <i class="fa-solid fa-user-check"></i>
+                <span class="ms-1">Đang theo dõi</span>
+              </a>
+            <?php else : ?>
+              <a href="/users/<?= $user['id'] ?>/follow" class="btn btn-primary rounded-pill">
+                <i class="fa-solid fa-user-plus"></i>
+                <span class="ms-1">Theo dõi</span>
+              </a>
+            <?php endif ?>
           <?php else: ?>
             <a href="/users/<?= $user['username'] ?>/edit" class="edit-profile btn btn-outline-secondary rounded-pill"
               data-bs-toggle="modal" data-bs-target="#editProfileModal">
