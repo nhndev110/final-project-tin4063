@@ -14,4 +14,10 @@ class Comment extends BaseModel
     $sql = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC";
     return DB::query($sql, [$post_id]);
   }
+
+  public static function countByPostID(int $post_id)
+  {
+    $sql = "SELECT COUNT(*) FROM comments WHERE post_id = ?";
+    return DB::query($sql, [$post_id]);
+  }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Like;
 use App\Models\Post;
 use App\Models\PostPhotos;
 use App\Models\User;
@@ -14,15 +13,34 @@ class PostService
     $user = User::findByUsername($username);
     $posts = Post::getByUserID($user['id']);
 
-    foreach ($posts as &$post) {
-      $post['images'] = PostPhotos::getByPostID($post['id']);
-    }
+    $posts = array_filter($posts, function ($post) use ($username) {
+      return $username === AuthService::user()['username'] || $post['status'];
+    });
 
     foreach ($posts as &$post) {
+      $post['images'] = PostPhotos::getByPostID($post['id']);
       $post['comments'] = CommentService::getCommentsByPostID($post['id']);
     }
 
     return $posts;
+  }
+
+  public static function getPostsByFollowedUsers($user_id)
+  {
+    $posts = Post::getByFollowedUsers(intval($user_id));
+
+    foreach ($posts as &$post) {
+      $post['user'] = UserService::getUserById($post['user_id']);
+      $post['images'] = PostPhotos::getByPostID($post['id']);
+      $post['comments'] = CommentService::getCommentsByPostID($post['id']);
+    }
+
+    return $posts;
+  }
+
+  public static function getImageByPostID($post_id)
+  {
+    return PostPhotos::getByPostID($post_id);
   }
 
   public static function getPostById($id)
@@ -58,12 +76,14 @@ class PostService
     return Post::delete(intval($id));
   }
 
-  public static function likePost($id)
+  public static function likePost(int $id)
   {
     if (LikeService::isPostLiked($id)) {
-      return LikeService::deleteLike($id);
+      LikeService::deleteLike($id);
+      return false;
     } else {
-      return LikeService::createLike(intval($id));
+      LikeService::createLike($id);
+      return true;
     }
   }
 }

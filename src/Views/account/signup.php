@@ -15,42 +15,51 @@
       <div class="border rounded p-4 bg-white shadow-sm">
         <h1 class="text-center fw-bold mb-3 fs-2" style="font-family: cursive;">H.N.L</h1>
         <p class="text-center">Đăng ký để xem ảnh và video từ bạn bè của bạn.</p>
-
+        <?php if (exists_error('message')) : ?>
+          <div class="alert alert-danger py-2 px-3" role="alert">
+            <span style="font-size: 0.925rem;"><?= error('message') ?></span>
+          </div>
+        <?php endif ?>
         <form method="post" action="/signup">
           <div class="mb-3">
             <input type="text"
               name="full_name"
               class="form-control"
-              placeholder="Họ và tên của bạn"
-              required />
+              value="<?= old("full_name") ?>"
+              placeholder="Họ và tên của bạn" />
+            <div class="text-danger mt-2"><?= error("full_name") ?></div>
           </div>
           <div class="mb-3">
             <input type="text"
               name="username"
               class="form-control"
-              placeholder="Tên người dùng"
-              required />
+              value="<?= old("username") ?>"
+              placeholder="Tên người dùng" />
+            <div class="text-danger mt-2"><?= error("username") ?></div>
+          </div>
+          <div class="mb-3">
+            <input type="email"
+              name="email"
+              value="<?= old("email") ?>"
+              class="form-control"
+              placeholder="Email của bạn" />
+            <div class="text-danger mt-2"><?= error("email") ?></div>
           </div>
           <div class="mb-3">
             <input type="password"
               name="password"
               class="form-control"
-              placeholder="Mật khẩu"
-              required />
+              value="<?= old("password") ?>"
+              placeholder="Mật khẩu" />
+            <div class="text-danger mt-2"><?= error("password") ?></div>
           </div>
           <div class="mb-3">
             <input type="password"
               name="confirm_password"
+              value="<?= old("confirm_password") ?>"
               class="form-control"
-              placeholder="Xác nhận mật khẩu"
-              required />
-          </div>
-          <div class="mb-3">
-            <input type="text"
-              name="email"
-              class="form-control"
-              placeholder="Email của bạn"
-              required />
+              placeholder="Xác nhận mật khẩu" />
+            <div class="text-danger mt-2"><?= error("confirm_password") ?></div>
           </div>
           <div class="d-grid">
             <button type="submit" class="btn btn-primary fw-bold">Đăng kí</button>

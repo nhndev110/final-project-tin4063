@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\AuthService;
+
+$userLoggedIn = AuthService::user();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,6 +65,14 @@ use App\Services\AuthService;
     .comments::-webkit-scrollbar-thumb:hover {
       background-color: #999;
     }
+
+    .user-card {
+      transition: .3s;
+    }
+
+    .user-card:hover {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
   </style>
   <?= $styles ?? "" ?>
 </head>
@@ -93,28 +103,33 @@ use App\Services\AuthService;
                 <i class="fa-regular fa-square-plus"></i>
                 <span class="ms-1">Tạo mới</span>
               </a>
-              <!-- <a href="/users/<?= AuthService::user()['username'] ?>" -->
-              <!-- class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/users') ? 'active' : '' ?> mt-2 border">
-              <i class="fa-regular fa-user"></i>
-              <span class="ms-1">Hồ sơ</span>
-              </a> -->
-              <a href="/users/<?= htmlspecialchars(AuthService::user()['username']); ?>"
-                class="list-group-item list-group-item-action rounded-pill <?= str_starts_with($uri, '/users/' . AuthService::user()['username']) ? 'active' : '' ?> mt-2 border">
-                <i class="fa-regular fa-user"></i>
-                <span class="ms-1">Hồ sơ</span>
-              </a>
-            </div>
-            <div class="mt-auto">
-              <a href="/logout" class="w-100 btn btn-danger rounded-pill">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span class="ms-1">Đăng xuất</span>
-              </a>
-            </div>
           </div>
         </div>
 
-        <div class="col-9 py-4" style="margin-left: 25%;">
+        <div class="col-6 py-4" style="margin-left: 25%;">
           <?= $content ?? "" ?>
+        </div>
+
+        <div class="col-3">
+          <div class="user-card d-flex align-items-center justify-content-between mt-4 pe-3 bg-light rounded shadow-sm">
+            <a href="/users/<?= $userLoggedIn['username'] ?>" class="d-flex py-3 ps-3 align-items-center text-decoration-none text-dark">
+              <img src="<?= is_null_or_white_space($userLoggedIn['profile_picture']) ? "/assets/images/no-avatar.png" : "/assets/images/users/{$userLoggedIn['id']}/{$userLoggedIn['profile_picture']}" ?>"
+                class="rounded-circle me-3"
+                alt="User"
+                style="width: 50px; height: 50px; object-fit: cover;" />
+              <div class="flex-grow-1">
+                <h6 class="mb-0 fw-medium">
+                  <?= htmlspecialchars($userLoggedIn['username']) ?>
+                </h6>
+                <small class="text-muted">
+                  <?= htmlspecialchars($userLoggedIn['full_name']); ?>
+                </small>
+              </div>
+            </a>
+            <a href="/logout" class="btn btn-danger btn-sm rounded-circle">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -13,12 +13,12 @@ class UserService
 
   public static function findUserByEmail(string $email)
   {
-    return User::findByEmail($email);
+    return User::findByEmail($email) ?? null;
   }
 
   public static function findUserByUsername(string $username)
   {
-    return User::findByUsername($username);
+    return User::findByUsername($username) ?? null;
   }
 
   public static function getUserById($id)

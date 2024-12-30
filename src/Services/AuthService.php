@@ -13,6 +13,7 @@ class AuthService
         'full_name' => $user['full_name'],
         'username' => $user['username'],
         'email' => $user['email'],
+        'profile_picture' => $user['profile_picture'],
       ];
       return true;
     }
@@ -20,7 +21,7 @@ class AuthService
     return false;
   }
 
-  public static function signin(
+  public static function signup(
     $full_name,
     $username,
     $password,
@@ -35,12 +36,17 @@ class AuthService
       "email" => $email,
     ]);
 
-    $_SESSION["user"] = [
-      "id" => $user_id,
-      "full_name" => $full_name,
-      "username" => $username,
-      "email" => $email,
-    ];
+    if ($user_id === 0) {
+      return false;
+    } else {
+      $_SESSION["user"] = [
+        "id" => $user_id,
+        "full_name" => $full_name,
+        "username" => $username,
+        "email" => $email,
+      ];
+      return true;
+    }
   }
 
   public static function logout()

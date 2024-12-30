@@ -14,6 +14,7 @@ class Follow extends BaseModel
     $sql = "DELETE FROM follows WHERE follower_id = ? AND followed_id = ?";
     return DB::execute($sql, [$follower_id, $followed_id]);
   }
+
   public static function findByFollow($follower_id, $followed_id)
   {
     $sql = "SELECT * FROM follows WHERE follower_id = ? AND followed_id = ?";
@@ -23,5 +24,17 @@ class Follow extends BaseModel
   {
     $sql = "SELECT COUNT(*) as total FROM follows WHERE follower_id = ?";
     return DB::query($sql, [$follower_id])[0]['total'] ?? 0;
+  }
+
+  public static function getFollowerCountByFollowedID(int $followed_id)
+  {
+    $sql = "SELECT COUNT(*) AS cnt FROM follows WHERE followed_id = ? GROUP BY followed_id";
+    return DB::query($sql, [$followed_id]);
+  }
+
+  public static function getFollowedCountByFollowerID(int $follower_id)
+  {
+    $sql = "SELECT COUNT(*) AS cnt FROM follows WHERE follower_id = ? GROUP BY follower_id";
+    return DB::query($sql, [$follower_id]);
   }
 }
