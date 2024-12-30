@@ -27,8 +27,7 @@ $router->addRoute('/search', [new SearchController(), 'index']);
 $router->addRoute('/users/(.*)', [new UserController(), 'profile']);
 $router->addRoute('/users/(.*)/edit', [new UserController(), 'edit']);
 $router->addRoute('/users/update', [new UserController(), 'update']);
-$router->addRoute('/users/follow/(\d+)', [new UserController(), 'follow']);
-$router->addRoute('/users/unfollow/(\d+)', [new UserController(), 'unfollow']);
+$router->addRoute('/users/(\d+)/follow', [new UserController(), 'follow']);
 
 $router->addRoute('/login', [new AccountController(), 'login']);
 $router->addRoute('/signup', [new AccountController(), 'signup']);
