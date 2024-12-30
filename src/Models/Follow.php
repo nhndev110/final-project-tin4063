@@ -20,11 +20,6 @@ class Follow extends BaseModel
     $sql = "SELECT * FROM follows WHERE follower_id = ? AND followed_id = ?";
     return DB::query($sql, [$follower_id, $followed_id]);
   }
-  public static function countByFollow($follower_id)
-  {
-    $sql = "SELECT COUNT(*) as total FROM follows WHERE follower_id = ?";
-    return DB::query($sql, [$follower_id])[0]['total'] ?? 0;
-  }
 
   public static function getFollowerCountByFollowedID(int $followed_id)
   {

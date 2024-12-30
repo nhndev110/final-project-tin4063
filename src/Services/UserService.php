@@ -11,6 +11,11 @@ class UserService
     return User::all();
   }
 
+  public static function findUserByFullNameOrUsername(string $query)
+  {
+    return User::findByFullNameOrUsername($query) ?? [];
+  }
+
   public static function findUserByEmail(string $email)
   {
     return User::findByEmail($email) ?? null;

@@ -27,6 +27,17 @@ class UserController
     ]);
   }
 
+  public function search()
+  {
+    AuthService::checkAuthentication();
+
+    $query = $_GET['q'] ?? '';
+    $users = UserService::findUserByFullNameOrUsername($query);
+    return view('Search/index', [
+      'users' => $users
+    ]);
+  }
+
   public function edit(string $username)
   {
     AuthService::checkAuthentication();
@@ -36,14 +47,16 @@ class UserController
     ]);
   }
 
-  public function follow($follow_id)
+  public function follow($follower_id)
   {
     AuthService::checkAuthentication();
 
-    if (FollowService::isFollow($follow_id)) {
-      return FollowService::deleteFollow($follow_id);
+    if (FollowService::isFollowing($follower_id)) {
+      FollowService::deleteFollow($follower_id);
+      return redirect_back();
     } else {
-      return FollowService::createFollow(intval($follow_id));
+      FollowService::createFollow(intval($follower_id));
+      return redirect_back();
     }
   }
 
@@ -89,21 +102,5 @@ class UserController
     } else {
       return redirect("/home");
     }
-  }
-
-  public function follow($followed_id)
-  {
-    AuthService::checkAuthentication();
-
-    $follower_id = AuthService::user()['user_id'];
-    FollowService::followUser($follower_id, $followed_id);
-  }
-
-  public function unfollow($followed_id)
-  {
-    AuthService::checkAuthentication();
-
-    $follower_id = AuthService::user()['user_id'];
-    FollowService::unfollowUser($follower_id, $followed_id);
   }
 }

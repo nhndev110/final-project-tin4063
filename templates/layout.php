@@ -103,6 +103,7 @@ $userLoggedIn = AuthService::user();
                 <i class="fa-regular fa-square-plus"></i>
                 <span class="ms-1">Tạo mới</span>
               </a>
+            </div>
           </div>
         </div>
 

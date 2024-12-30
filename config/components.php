@@ -154,10 +154,9 @@ function Post(
   string $full_name,
   string $username,
   int $followers,
-  int $follow_id
+  int $followed_id
 ) {
-  // Kiểm tra xem người dùng đã theo dõi hay chưa
-  $is_following = FollowService::isFollow($follow_id);
+  $is_following = FollowService::isFollowing($followed_id);
 ?>
   <div class="d-flex align-items-center mb-4">
     <img src="/assets/images/no-avatar.png"
@@ -165,19 +164,23 @@ function Post(
       alt="User"
       style="width: 40px; height: 40px; object-fit: cover;" />
     <div class="flex-grow-1">
-      <h6 class="mb-0"><?= htmlspecialchars($username); ?></h6>
-      <small class="text-muted"><?= htmlspecialchars($full_name); ?></small>
+      <h6 class="mb-0">
+        <a href="/users/<?= htmlspecialchars($username) ?>" class="link-dark link-underline-opacity-0 link-underline-opacity-75-hover">
+          <?= htmlspecialchars($username) ?>
+        </a>
+      </h6>
+      <small class="text-muted"><?= htmlspecialchars($full_name) ?></small>
       <span class="fw-bolder">&#183;</span>
-      <small class="text-muted"><?= htmlspecialchars($followers); ?> Người theo dõi</small>
+      <small class="text-muted"><?= $followers ?> Người theo dõi</small>
     </div>
     <?php if ($is_following): ?>
-      <a href="/follow/delete/<?= $follow_id ?>"
+      <a href="/users/<?= $followed_id ?>/follow"
         class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">
         <i class="fa-solid fa-user-check"></i>
         <span>Đã theo dõi</span>
       </a>
     <?php else: ?>
-      <a href="/follow/create/<?= $follow_id ?>"
+      <a href="/users/<?= $followed_id ?>/follow"
         class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">
         <i class="fa-solid fa-user-plus"></i>
         <span>Theo dõi</span>

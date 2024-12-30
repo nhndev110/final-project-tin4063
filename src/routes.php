@@ -4,7 +4,6 @@ use App\Controllers\AccountController;
 use App\Controllers\CommentController;
 use App\Controllers\HomeController;
 use App\Controllers\PostController;
-use App\Controllers\SearchController;
 use App\Controllers\UserController;
 use App\Core\Router;
 
@@ -22,8 +21,7 @@ $router->addRoute('/posts/(\d+)/comments/create', [new CommentController(), 'cre
 $router->addRoute('/posts/(\d+)/comments', [new CommentController(), 'index']);
 $router->addRoute('/posts/(\d+)/like', [new PostController(), 'like']);
 
-$router->addRoute('/search', [new SearchController(), 'index']);
-
+$router->addRoute('/search', [new UserController(), 'search']);
 $router->addRoute('/users/(.*)', [new UserController(), 'profile']);
 $router->addRoute('/users/(.*)/edit', [new UserController(), 'edit']);
 $router->addRoute('/users/update', [new UserController(), 'update']);
