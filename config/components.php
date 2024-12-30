@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\AuthService;
+use App\Services\FollowService;
 use App\Services\LikeService;
 
 function Post(
@@ -153,8 +154,11 @@ function Post(
   string $full_name,
   string $username,
   int $followers,
-  int $followed_id
-) { ?>
+  int $follow_id
+) {
+  // Kiểm tra xem người dùng đã theo dõi hay chưa
+  $is_following = FollowService::isFollow($follow_id);
+?>
   <div class="d-flex align-items-center mb-4">
     <img src="/assets/images/no-avatar.png"
       class="rounded-circle me-3"
@@ -166,9 +170,18 @@ function Post(
       <span class="fw-bolder">&#183;</span>
       <small class="text-muted"><?= htmlspecialchars($followers); ?> Người theo dõi</small>
     </div>
-    <a href="/follow/create/<?= $followed_id ?>" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">
-      <i class="fa-solid fa-user-plus"></i>
-      <span>Theo dõi</span>
-    </a>
+    <?php if ($is_following): ?>
+      <a href="/follow/delete/<?= $follow_id ?>"
+        class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">
+        <i class="fa-solid fa-user-check"></i>
+        <span>Đã theo dõi</span>
+      </a>
+    <?php else: ?>
+      <a href="/follow/create/<?= $follow_id ?>"
+        class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover fw-medium">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Theo dõi</span>
+      </a>
+    <?php endif; ?>
   </div>
 <?php } ?>

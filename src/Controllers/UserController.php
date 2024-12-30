@@ -36,6 +36,17 @@ class UserController
     ]);
   }
 
+  public function follow($follow_id)
+  {
+    AuthService::checkAuthentication();
+
+    if (FollowService::isFollow($follow_id)) {
+      return FollowService::deleteFollow($follow_id);
+    } else {
+      return FollowService::createFollow(intval($follow_id));
+    }
+  }
+
   public function update()
   {
     AuthService::checkAuthentication();
